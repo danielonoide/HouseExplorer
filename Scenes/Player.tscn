@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://djywja6ah7g7o"]
+
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_8026b"]
+[ext_resource type="PackedScene" uid="uid://dwh1t4j3ikwvi" path="res://Scenes/Joystick.tscn" id="2_otth1"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1uyja"]
+radius = 0.3
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h0cai"]
+height = 1.7
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_8026b")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_1uyja")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_h0cai")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.4)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="UI/Control"]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = -380.0
+offset_right = 400.0
+offset_bottom = -80.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Joystick" parent="UI/Control/Control" instance=ExtResource("2_otth1")]
+unique_name_in_owner = true
+position = Vector2(150, 150)

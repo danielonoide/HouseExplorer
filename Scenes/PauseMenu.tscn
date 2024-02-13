@@ -1,0 +1,149 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwdfpow5x006k"]
+
+[ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wit1w")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -791.5
+offset_top = -426.5
+offset_right = 791.5
+offset_bottom = 426.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -961.0
+offset_top = 111.515
+offset_right = 961.0
+offset_bottom = 309.515
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Ajustes"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -730.5
+offset_top = -730.825
+offset_right = 730.5
+offset_bottom = -109.826
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 50
+
+[node name="HSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 400
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Sensibilidad horizontal "
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting" groups=["HSlider"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "50"
+
+[node name="VSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 400
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Sensibilidad vertical      "
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting" groups=["HSlider"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "50"
+
+[node name="ResumeButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Reanudar"
+
+[node name="FileButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Seleccionar modelo"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Salir"
+
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
