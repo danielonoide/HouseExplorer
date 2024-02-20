@@ -22,6 +22,17 @@ public partial class World : Node3D
 		gameManager.FileButtonPressed+=FileButtonPressed;
 
 		fileDialog = GetNode<FileDialog>("%FileDialog");
+		fileDialog.Invalidate();
+
+		if(!GameManager.IsMobile)
+		{
+			ui.Visible = false;
+		}
+		else
+		{
+			OS.RequestPermissions();
+			fileDialog.RootSubfolder = OS.GetSystemDir(OS.SystemDir.Downloads, true);
+		}
 
 	}
 
@@ -31,7 +42,8 @@ public partial class World : Node3D
 
 	private void ShowPauseMenu()
 	{
-		ui.Visible = false;
+		if(GameManager.IsMobile)
+			ui.Visible = false;
 		AddChild(PauseMenu.GetPauseMenu());		
 		pauseMenuActive = true;
 	}
@@ -59,7 +71,8 @@ public partial class World : Node3D
 	private void PauseMenuClosed()
 	{
 		pauseMenuActive = false;
-		ui.Visible = true;
+		if(GameManager.IsMobile)
+			ui.Visible = true;
 	}
 
 	private void FileButtonPressed()
@@ -86,8 +99,10 @@ public partial class World : Node3D
 			return;
 		}
 
+		
 		try
 		{
+			//OS.ShellOpen(path);
 			if (extension == "obj")
 			{
 				HandleObjFile(path);
