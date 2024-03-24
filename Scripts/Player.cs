@@ -3,8 +3,12 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
+	public const float InitialSpeed = 5.0f;
+	public const float InitialJumpVelocity = 4.0f;
+	public static float Speed {get; set;} = InitialSpeed;
+	public static float JumpVelocity {get; set;} = InitialJumpVelocity;
+
+	public static bool Fly {get; set;} = false;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -34,17 +38,22 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
+ 	public override void _PhysicsProcess(double delta)
 	{
 		Vector3 velocity = Velocity;
 
 		// Add the gravity.
-		if (!IsOnFloor())
-			velocity.Y -= gravity * (float)delta;
+		if(!Fly)
+		{
+			if (!IsOnFloor())
+				velocity.Y -= gravity * (float)delta;
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
-			velocity.Y = JumpVelocity;
+			// Handle Jump.
+			if (Input.IsActionJustPressed("jump") && IsOnFloor())
+				velocity.Y = JumpVelocity;
+
+		}
+
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
@@ -59,30 +68,51 @@ public partial class Player : CharacterBody3D
 			inputDir = joystick.GetDirection();
 		}
 
-		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+/* 		GD.Print("Global basis", camera3D.GlobalBasis);
+		GD.Print("vector así nomás ", new Vector3(inputDir.X, 0, inputDir.Y));
+		GD.Print("multiplicación: ", camera3D.GlobalBasis * new Vector3(inputDir.X, 0, inputDir.Y)); */
+
+		//Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized(); // OG
+		//Vector3 direction = (camera3D.GlobalBasis * new Vector3(inputDir.X, Convert.ToInt32(Fly)*inputDir.Y, inputDir.Y)).Normalized();
+		//Vector3 direction = (camera3D.GlobalBasis * new Vector3(inputDir.X, inputDir.Y, inputDir.Y)).Normalized();
+
+		//Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized(); // OG
+
+/* 		float x = direction.X, z = direction.Z;
+
+		direction *= camera3D.GlobalBasis;
+		direction.X = x;
+		direction.Z = z;
+
+		GD.Print(direction); */
+
+		Vector3 direction = (camera3D.GlobalBasis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
+
+			if(Fly)
+				velocity.Y = direction.Y * Speed;
 		}
 		else
 		{
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			
+			if(Fly)
+				velocity.Y = Mathf.MoveToward(Velocity.Y, 0, Speed);
 		}
-
-/* 		GD.Print("Transform basis: ", Transform.Basis);
-		GD.Print("Input dir: ", inputDir);
-		GD.Print("Direction: ", direction); */
 
 
 		Velocity = velocity;
 
-
 		MoveAndSlide();
 		MoveCameraController();
-	}
+	} 
+
+
 
 	public void MoveCameraController()
 	{

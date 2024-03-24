@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cwdfpow5x006k"]
+[gd_scene load_steps=4 format=3 uid="uid://cwdfpow5x006k"]
 
 [ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
+[ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_x0ua1"]
+[ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_7ngek"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -15,7 +17,28 @@ script = ExtResource("1_wit1w")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 100
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 96.0
+offset_right = -108.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="BackButton" type="TextureButton" parent="CanvasLayer"]
+visible = false
+offset_left = 147.0
+offset_top = 30.0
+offset_right = 228.0
+offset_bottom = 93.0
+texture_normal = ExtResource("2_x0ua1")
+texture_pressed = ExtResource("3_7ngek")
+texture_hover = ExtResource("3_7ngek")
+
+[node name="MainMenu" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,38 +46,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Control"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -791.5
-offset_top = -426.5
-offset_right = 791.5
-offset_bottom = 426.5
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control"]
+[node name="LabelContainer" type="CenterContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -961.0
-offset_top = 111.515
 offset_right = 961.0
-offset_bottom = 309.515
+offset_bottom = 198.0
 grow_horizontal = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/CenterContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/LabelContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
 text = "Ajustes"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -69,21 +76,21 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 50
 
-[node name="HSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="HSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 400
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting"]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 25
 text = "Sensibilidad horizontal "
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting" groups=["HSlider"]]
+[node name="HSlider" type="HSlider" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting" groups=["HSlider"]]
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 value = 50.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/HSensitivitySetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting/HSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -99,21 +106,21 @@ grow_vertical = 2
 scale = Vector2(1, 1.0242)
 text = "50"
 
-[node name="VSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="VSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 400
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting"]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 25
 text = "Sensibilidad vertical      "
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting" groups=["HSlider"]]
+[node name="HSlider" type="HSlider" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting" groups=["HSlider"]]
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 value = 50.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer/VSensitivitySetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting/HSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -129,21 +136,314 @@ grow_vertical = 2
 scale = Vector2(1, 1.0242)
 text = "50"
 
-[node name="ResumeButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Reanudar"
 
-[node name="FileButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="FileButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Seleccionar modelo"
 
-[node name="QuitButton" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="ModelButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Configurar modelo"
+
+[node name="CharacterButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Configurar personaje"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Salir"
 
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[node name="CharacterOptions" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LabelContainer" type="CenterContainer" parent="CanvasLayer/CharacterOptions"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -961.0
+offset_right = 961.0
+offset_bottom = 198.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/LabelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Ajustes del personaje"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CharacterOptions"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.5
+offset_top = -12.0
+offset_right = 24.5
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="FlySetting" type="HBoxContainer" parent="CanvasLayer/CharacterOptions/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 200
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting"]
+layout_mode = 2
+theme_override_constants/h_separation = 785
+theme_override_font_sizes/font_size = 25
+text = "Volar        "
+
+[node name="SpeedSetting" type="HBoxContainer" parent="CanvasLayer/CharacterOptions/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 400
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Velocidad"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 5.0
+step = 0.1
+value = 1.0
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "1"
+
+[node name="JumpSetting" type="HBoxContainer" parent="CanvasLayer/CharacterOptions/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 289
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Velocidad del salto"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 5.0
+step = 0.1
+value = 1.0
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "1"
+
+[node name="ModelOptions" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 100.0
+offset_top = 100.0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ModelOptions"]
+layout_mode = 1
+offset_right = 1288.0
+offset_bottom = 417.0
+theme_override_constants/separation = 50
+
+[node name="XPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posicion en X"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="YPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posicion en Y"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="ZPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posicion en Z"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="ScaleSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Escala            "
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -39.0
+offset_right = 32.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "1"
+
+[node name="AcceptButton" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Aceptar"
+
+[connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/CharacterButton" to="." method="_on_character_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/CheckButton" to="." method="_on_fly_button_toggled"]
+[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider" to="." method="_on_jump_slider_value_changed"]
+[connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]

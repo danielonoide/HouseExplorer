@@ -9,14 +9,16 @@ public partial class World : Node3D
 	FileDialog fileDialog;
 	GameManager gameManager;
 
-	string currentModelName = "CurrentModel";
-	string[] supportedFiles = {"obj", "dae", "fbx", "gltf"};
+	//string currentModelName = "CurrentModel";
+	Node3D currentModel;
+	string[] supportedFiles = {"gltf"};//, "fbx", "dae", "obj};
 
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
 
 		ui = GetNode<CanvasLayer>("UI");
+		currentModel = GetNode<Node3D>("CurrentModel");
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed+=PauseMenuClosed;
 		gameManager.FileButtonPressed+=FileButtonPressed;
@@ -27,6 +29,7 @@ public partial class World : Node3D
 		if(!GameManager.IsMobile)
 		{
 			ui.Visible = false;
+			//fileDialog.RootSubfolder = OS.GetUserDataDir();
 		}
 		else
 		{
@@ -44,6 +47,7 @@ public partial class World : Node3D
 	{
 		if(GameManager.IsMobile)
 			ui.Visible = false;
+
 		AddChild(PauseMenu.GetPauseMenu());		
 		pauseMenuActive = true;
 	}
@@ -92,6 +96,8 @@ public partial class World : Node3D
 	{
 		string extension = path.GetExtension().ToLower();
 
+		//GD.Print("Ruta del archivo: ", path);
+
 		if (!supportedFiles.Contains(extension))
 		{
 			OS.Alert($"Archivo no soportado: {extension}");
@@ -99,17 +105,17 @@ public partial class World : Node3D
 			return;
 		}
 
-		
 		try
 		{
 			//OS.ShellOpen(path);
-			if (extension == "obj")
+/* 			if (extension == "obj")
 			{
 				HandleObjFile(path);
 				return;
-			}
+			} */
 			
-			HandleOtherFile(path);
+			HandleGltfFile(path);
+
 		}
 		catch (InvalidCastException invalidCastException)
 		{
@@ -121,31 +127,123 @@ public partial class World : Node3D
 		}
 	}
 
-	private void HandleObjFile(string path)
+	private void HandleObjFile(string path)  //No funciona correctamente
 	{
-		MeshInstance3D modelInstance = new()
+/* 		MeshInstance3D modelInstance = new()
 		{
-			Mesh = GD.Load<Mesh>(path),
+			Mesh = ResourceLoader.Load<Mesh>(path)
 		};
 
-		ReplaceCurrentModel(modelInstance);
+		modelInstance.CreateTrimeshCollision();
+
+		ReplaceCurrentModel(modelInstance); */
+
+		GDScript gdScript = GD.Load<GDScript>("res://Scripts/ObjFileLoader.gd");
+		GodotObject objLoader = (GodotObject) gdScript.New();
+		try
+		{
+			MeshInstance3D modelInstance = new()
+			{
+				Mesh = (Mesh)objLoader.Call("load_obj", path, path.Replace(".obj", ".mtl"))
+			};
+			
+
+			modelInstance.CreateTrimeshCollision();
+
+			ReplaceCurrentModel(modelInstance);
+		}catch(Exception e)
+		{
+			OS.Alert("No se pudo cargar el modelo ", e.Message);
+		}
+	}
+
+	private void HandleGltfFile(string path)
+	{
+		GltfDocument gltfDocument = new();
+		GltfState gltfState = new();
+		var error = gltfDocument.AppendFromFile(path, gltfState);
+		if(error == Error.Ok)
+		{
+			var gltfScene = gltfDocument.GenerateScene(gltfState);
+			//AddCollisionsGltf(gltfScene);
+			ReplaceCurrentModel(gltfScene as Node3D);
+		}
+		else
+		{
+			OS.Alert("No se puedo procesar el archivo GLTF");
+		}
+
+	}
+
+	private void AddCollisionsGltf(Node gltfScene)
+	{
+		GD.Print("LLamado");
+		foreach(Node node in gltfScene.GetChildren())
+		{
+			if(node is MeshInstance3D meshInstance3D)
+			{
+				meshInstance3D.CreateConvexCollision(true, true);
+			}
+			else
+			{
+				AddCollisionsGltf(gltfScene);
+			}
+		}
+
 	}
 
 	private void HandleOtherFile(string path)
 	{
-		PackedScene packedScene = GD.Load<PackedScene>(path);
+		PackedScene packedScene = ResourceLoader.Load<PackedScene>(path);
 		Node3D node3D = packedScene.Instantiate<Node3D>();
 
 		ReplaceCurrentModel(node3D);
+
+/* 		PackedScene packedScene = GD.Load<PackedScene>(path);
+		Node3D node3D = packedScene.Instantiate<Node3D>();
+
+		foreach(Node node in node3D.GetChildren())
+		{
+			if(node is MeshInstance3D meshInstance3D)
+			{
+				meshInstance3D.CreateTrimeshCollision();
+				currentModel?.QueueFree();
+				AddChild(meshInstance3D);
+				currentModel = meshInstance3D;
+				return;
+			}
+		}
+
+		OS.Alert("No se pueden agregar colisiones a este tipo de archivo");
+		ReplaceCurrentModel(node3D); */
 	}
 
-	private void ReplaceCurrentModel(Node newModel)
+	private void CreateCollision3D(MeshInstance3D baseModel)
 	{
-		Node existingModel = GetNodeOrNull(currentModelName);
-		existingModel?.QueueFree();
+		Aabb aabb = baseModel.Mesh.GetAabb();
+
+		
+        BoxShape3D boxShape = new()
+        {
+            Size = aabb.Size
+        };
+
+		CollisionShape3D collisionShape = new()
+		{
+			Shape = boxShape
+		};
+
+		//area3D.AddChild(collisionShape);	
+
+    }
+
+	private void ReplaceCurrentModel(Node3D newModel)
+	{
+		//Node3D existingModel = GetNodeOrNull<Node3D>(currentModelName);
+		currentModel?.QueueFree();
 
 		AddChild(newModel);
-		currentModelName = newModel.Name;
+		currentModel = newModel;
 	}
 
 
