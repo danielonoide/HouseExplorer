@@ -13,13 +13,18 @@ public partial class ModelOptions : Control
 
     SliderType currentSliderType = SliderType.Position;
 
-    bool eventDisabled = false;
+    bool eventDisabled = false, scaleProportion = false;
     HSlider[] modelSliders;
     Label[] modelLabels, sliderLabels = new Label[3];
     Button[] restartButtons = new Button[3];
     Vector3 ChangingVector {get=>new((float)modelSliders[0].Value, (float)modelSliders[1].Value, (float)modelSliders[2].Value);}
+
+
+    HBoxContainer proportionSetting;
 	public override void _Ready()
     {
+        proportionSetting = GetNode<HBoxContainer>("%ProportionSetting");
+
         modelSliders = GetTree().GetNodesInGroup("ModelSliders").Select(s => s as HSlider).ToArray();
         modelLabels = GetTree().GetNodesInGroup("ModelLabels").Select(s => s as Label).ToArray();
         
@@ -114,13 +119,13 @@ public partial class ModelOptions : Control
     {
         currentSliderType = newSliderType;
 
-        eventDisabled = true;
+        proportionSetting.Visible = currentSliderType == SliderType.Scale;
 
+        eventDisabled = true;
         ChangeLabels();
         ChangeSliderStep();
         ChangeSliderRange();
         ChangeSliderValues();
-
         eventDisabled = false;
     }
 
@@ -131,26 +136,24 @@ public partial class ModelOptions : Control
             return;
         }
 
-        sliderLabels[index].Text = value.ToString();
-
-/*         switch(currentSliderType)
+        if(scaleProportion && currentSliderType == SliderType.Scale)
         {
-            case SliderType.Position:
-                World.SetModelPosition(ChangingVector);
-            break;
+            eventDisabled = true;
+            for(int i=0; i<modelSliders.Length; i++)
+            {
+                modelSliders[i].Value = value;
+                sliderLabels[i].Text = value.ToString();
+            }
+            eventDisabled = false;
 
-            case SliderType.Rotation:
-                World.SetModelRotation(ChangingVector);
-            break;
+            World mundo = new();
+            mundo.Call($"SetModel{currentSliderType}", ChangingVector);
+            return;
+        }
 
-            case SliderType.Scale:
-                World.SetModelScale(ChangingVector);
-            break;
-        } */
-
+        sliderLabels[index].Text = value.ToString();
         World world = new();
         world.Call($"SetModel{currentSliderType}", ChangingVector);
-
     }
 
     private void OnRestartButtonPressed(int index)
@@ -163,5 +166,10 @@ public partial class ModelOptions : Control
     private void _on_tab_bar_tab_changed(int tab)
     {
         ChangeSliderType((SliderType)tab);
+    }
+
+    private void _on_proportion_button_toggled(bool toggled_on)
+    {
+        scaleProportion = toggled_on;
     }
 }

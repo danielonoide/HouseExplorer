@@ -87,6 +87,12 @@ public partial class PauseMenu : Control
 		gameManager.EmitSignal(GameManager.SignalName.PauseMenuClosed);
 	}
 
+	private void _on_restart_button_pressed()
+	{
+		GetTree().Paused = false;
+		GetTree().ReloadCurrentScene();
+	}
+
 	private void _on_file_button_pressed()
 	{
 		GetTree().Paused = false;

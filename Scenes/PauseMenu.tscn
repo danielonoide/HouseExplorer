@@ -54,12 +54,12 @@ anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -961.0
 offset_right = 961.0
-offset_bottom = 198.0
+offset_bottom = 110.0
 grow_horizontal = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/MainMenu/LabelContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 80
 text = "Ajustes"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
@@ -81,6 +81,11 @@ theme_override_constants/separation = 50
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Reanudar"
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Reiniciar"
 
 [node name="FileButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
@@ -294,8 +299,9 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -601.0
-offset_bottom = -695.0
+offset_left = 30.0
+offset_right = -571.0
+offset_bottom = -606.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -316,8 +322,23 @@ tab_2/title = "Escala"
 layout_mode = 1
 offset_top = 100.0
 offset_right = 1288.0
-offset_bottom = 517.0
+offset_bottom = 398.0
 theme_override_constants/separation = 50
+
+[node name="ProportionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 200
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/ModelOptions/VBoxContainer/ProportionSetting"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/h_separation = 365
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Mantener proporción    "
 
 [node name="XSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
 layout_mode = 2
@@ -325,6 +346,10 @@ theme_override_constants/separation = 100
 
 [node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting" groups=["ModelLabels"]]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Posición en X"
 
@@ -341,14 +366,18 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 1.0242)
-text = " 0"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "0"
 
 [node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting"]
 layout_mode = 2
@@ -360,6 +389,10 @@ theme_override_constants/separation = 100
 
 [node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting" groups=["ModelLabels"]]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Posición en Y"
 
@@ -375,14 +408,18 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 1.0242)
-text = " 0"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "0"
 
 [node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting"]
 layout_mode = 2
@@ -394,6 +431,10 @@ theme_override_constants/separation = 100
 
 [node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting" groups=["ModelLabels"]]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Posición en Z"
 
@@ -410,32 +451,31 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 1.0242)
-text = " 0"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "0"
 
 [node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting"]
 layout_mode = 2
 text = "Restablecer"
 
-[node name="AcceptButton" type="Button" parent="CanvasLayer/ModelOptions"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -36.0
-offset_right = 1288.0
-grow_vertical = 0
+[node name="AcceptButton" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Aceptar"
 
 [connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ModelButton" to="." method="_on_model_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/CharacterButton" to="." method="_on_character_button_pressed"]
@@ -445,4 +485,5 @@ text = "Aceptar"
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider" to="." method="_on_speed_slider_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider" to="." method="_on_jump_slider_value_changed"]
 [connection signal="tab_changed" from="CanvasLayer/ModelOptions/TabBar" to="CanvasLayer/ModelOptions" method="_on_tab_bar_tab_changed"]
-[connection signal="pressed" from="CanvasLayer/ModelOptions/AcceptButton" to="." method="_on_resume_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/ModelOptions/VBoxContainer/ProportionSetting/CheckButton" to="CanvasLayer/ModelOptions" method="_on_proportion_button_toggled"]
+[connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]
