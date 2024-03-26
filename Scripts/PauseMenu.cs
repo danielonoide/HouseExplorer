@@ -16,7 +16,7 @@ public partial class PauseMenu : Control
 	private const float vAdjustment = 5000f;
 
 	GameManager gameManager;
-	Control mainMenuControl, characterOptionsControl;
+	Control mainMenuControl, characterOptionsControl, modelOptionsControl;
 	TextureButton backButton;
 	ColorRect colorRect;
 
@@ -25,6 +25,7 @@ public partial class PauseMenu : Control
 		gameManager = GetNode<GameManager>("/root/GameManager");
 		mainMenuControl = GetNode<Control>("CanvasLayer/MainMenu");
 		characterOptionsControl = GetNode<Control>("CanvasLayer/CharacterOptions");
+		modelOptionsControl = GetNode<Control>("CanvasLayer/ModelOptions");
 		backButton = GetNode<TextureButton>("CanvasLayer/BackButton");
 		jumpSlider = GetNode<HSlider>("CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider");
 		jumpSliderLabel = GetNode<Label>("CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider/Label");
@@ -119,11 +120,25 @@ public partial class PauseMenu : Control
 		}
 	}
 
+	private void _on_model_button_pressed()
+	{
+		mainMenuControl.Visible = false;
+		backButton.Visible = false;
+		modelOptionsControl.Visible = true;
+		colorRect.Visible = false;
+		//GetTree().Paused = false;
+	}
+
 	private void _on_character_button_pressed()
 	{
 		mainMenuControl.Visible = false;
 		backButton.Visible = true;
 		characterOptionsControl.Visible = true;
+	}
+
+	private void _on_scenery_button_pressed()
+	{
+		
 	}
 
 
@@ -150,6 +165,5 @@ public partial class PauseMenu : Control
 	{
 		Player.Fly = toggled_on;
 	}
-
 	
 }

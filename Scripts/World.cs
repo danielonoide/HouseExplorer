@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.IO;
 using System.Linq;
 
 public partial class World : Node3D
@@ -9,10 +10,12 @@ public partial class World : Node3D
 	FileDialog fileDialog;
 	GameManager gameManager;
 
-	//string currentModelName = "CurrentModel";
-	Node3D currentModel;
-	string[] supportedFiles = {"gltf"};//, "fbx", "dae", "obj};
+	//string currentModelName = "currentModel";
+	private static Node3D currentModel;
+	string[] supportedFiles = {"gltf", "glb", "obj"};//, "fbx", "dae", "obj};
 
+	static PlaneMesh floorMesh;
+	public static Vector2 FloorSize {get=> floorMesh.Size; set=>floorMesh.Size = value;}
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -20,11 +23,13 @@ public partial class World : Node3D
 		ui = GetNode<CanvasLayer>("UI");
 		currentModel = GetNode<Node3D>("CurrentModel");
         gameManager = GetNode<GameManager>("/root/GameManager");
-		gameManager.PauseMenuClosed+=PauseMenuClosed;
-		gameManager.FileButtonPressed+=FileButtonPressed;
+		gameManager.PauseMenuClosed += PauseMenuClosed;
+		gameManager.FileButtonPressed += FileButtonPressed;
 
 		fileDialog = GetNode<FileDialog>("%FileDialog");
 		fileDialog.Invalidate();
+
+		floorMesh = GetNode<MeshInstance3D>("Floor").Mesh as PlaneMesh;
 
 		if(!GameManager.IsMobile)
 		{
@@ -87,7 +92,6 @@ public partial class World : Node3D
 
 	private void _on_file_dialog_canceled()
 	{
-		GD.Print("Se cancela");
         Input.MouseMode = Input.MouseModeEnum.Captured;
 		fileDialog.Visible = false;
 	}
@@ -108,11 +112,11 @@ public partial class World : Node3D
 		try
 		{
 			//OS.ShellOpen(path);
-/* 			if (extension == "obj")
+			if (extension == "obj")
 			{
 				HandleObjFile(path);
 				return;
-			} */
+			}
 			
 			HandleGltfFile(path);
 
@@ -136,21 +140,29 @@ public partial class World : Node3D
 
 		modelInstance.CreateTrimeshCollision();
 
-		ReplaceCurrentModel(modelInstance); */
+		ReplacecurrentModel(modelInstance); */
 
 		GDScript gdScript = GD.Load<GDScript>("res://Scripts/ObjFileLoader.gd");
 		GodotObject objLoader = (GodotObject) gdScript.New();
 		try
 		{
+			string mtl_path = path.Replace(".obj", ".mtl");
+			
+			if(!Godot.FileAccess.FileExists(mtl_path))
+			{
+				mtl_path = string.Empty;
+			}
+			
+
 			MeshInstance3D modelInstance = new()
 			{
-				Mesh = (Mesh)objLoader.Call("load_obj", path, path.Replace(".obj", ".mtl"))
+				Mesh = (Mesh)objLoader.Call("load_obj", path, mtl_path)
 			};
 			
 
 			modelInstance.CreateTrimeshCollision();
 
-			ReplaceCurrentModel(modelInstance);
+			ReplacecurrentModel(modelInstance);
 		}catch(Exception e)
 		{
 			OS.Alert("No se pudo cargar el modelo ", e.Message);
@@ -166,7 +178,7 @@ public partial class World : Node3D
 		{
 			var gltfScene = gltfDocument.GenerateScene(gltfState);
 			//AddCollisionsGltf(gltfScene);
-			ReplaceCurrentModel(gltfScene as Node3D);
+			ReplacecurrentModel(gltfScene as Node3D);
 		}
 		else
 		{
@@ -197,7 +209,7 @@ public partial class World : Node3D
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>(path);
 		Node3D node3D = packedScene.Instantiate<Node3D>();
 
-		ReplaceCurrentModel(node3D);
+		ReplacecurrentModel(node3D);
 
 /* 		PackedScene packedScene = GD.Load<PackedScene>(path);
 		Node3D node3D = packedScene.Instantiate<Node3D>();
@@ -215,7 +227,7 @@ public partial class World : Node3D
 		}
 
 		OS.Alert("No se pueden agregar colisiones a este tipo de archivo");
-		ReplaceCurrentModel(node3D); */
+		ReplacecurrentModel(node3D); */
 	}
 
 	private void CreateCollision3D(MeshInstance3D baseModel)
@@ -237,13 +249,52 @@ public partial class World : Node3D
 
     }
 
-	private void ReplaceCurrentModel(Node3D newModel)
+	private void ReplacecurrentModel(Node3D newModel)
 	{
 		//Node3D existingModel = GetNodeOrNull<Node3D>(currentModelName);
 		currentModel?.QueueFree();
 
 		AddChild(newModel);
 		currentModel = newModel;
+	}
+
+	public static void SetModelPosition(Vector3 position)
+	{
+		currentModel.Position = position;
+	}
+
+	public static void SetModelScale(Vector3 scale)
+	{
+		currentModel.Scale = scale;
+	}
+
+	public static void SetModelRotation(Vector3 rotation)
+	{
+		currentModel.RotationDegrees = rotation;
+	}
+
+	public static Vector3 GetModelPosition()
+	{
+		return currentModel.Position;
+	}
+
+	public static Vector3 GetModelRotation()
+	{
+		return currentModel.RotationDegrees;
+	}
+	public static Vector3 GetModelScale()
+	{
+		return currentModel.Scale;
+	}
+
+	private void _on_accept_dialog_confirmed()
+	{
+		fileDialog.Visible = true;
+	}
+
+	private void _on_accept_dialog_canceled()
+	{
+		fileDialog.Visible = true;
 	}
 
 

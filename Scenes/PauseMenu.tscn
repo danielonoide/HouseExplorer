@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwdfpow5x006k"]
+[gd_scene load_steps=5 format=3 uid="uid://cwdfpow5x006k"]
 
 [ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
 [ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_x0ua1"]
 [ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_7ngek"]
+[ext_resource type="Script" path="res://Scripts/ModelOptions.cs" id="4_2xl6y"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -76,66 +77,6 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 50
 
-[node name="HSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 400
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Sensibilidad horizontal "
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting" groups=["HSlider"]]
-custom_minimum_size = Vector2(830, 0)
-layout_mode = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/HSensitivitySetting/HSlider"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -12.0
-offset_top = -37.0
-offset_right = 28.0
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 1.0242)
-text = "50"
-
-[node name="VSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 400
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Sensibilidad vertical      "
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting" groups=["HSlider"]]
-custom_minimum_size = Vector2(830, 0)
-layout_mode = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/VBoxContainer/VSensitivitySetting/HSlider"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -12.0
-offset_top = -37.0
-offset_right = 28.0
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 1.0242)
-text = "50"
-
 [node name="ResumeButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
@@ -154,7 +95,12 @@ text = "Configurar modelo"
 [node name="CharacterButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-text = "Configurar personaje"
+text = "Personaje"
+
+[node name="SceneryButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Escenario"
 
 [node name="QuitButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
@@ -282,168 +228,221 @@ grow_vertical = 2
 scale = Vector2(1, 1.0242)
 text = "1"
 
-[node name="ModelOptions" type="Control" parent="CanvasLayer"]
-visible = false
-layout_mode = 3
-anchors_preset = 0
-offset_left = 100.0
-offset_top = 100.0
-offset_right = 100.0
-offset_bottom = 100.0
-mouse_filter = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ModelOptions"]
-layout_mode = 1
-offset_right = 1288.0
-offset_bottom = 417.0
-theme_override_constants/separation = 50
-
-[node name="XPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+[node name="HSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/CharacterOptions/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 100
+theme_override_constants/separation = 232
 
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/HSensitivitySetting"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Posicion en X"
+text = "Sensibilidad horizontal "
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
-custom_minimum_size = Vector2(830, 0)
-layout_mode = 2
-min_value = -1000.0
-max_value = 1000.0
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting/HSlider"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 1.0242)
-text = " 0"
-
-[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/XPositionSetting"]
-layout_mode = 2
-text = "Restablecer"
-
-[node name="YPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 100
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Posicion en Y"
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
-custom_minimum_size = Vector2(830, 0)
-layout_mode = 2
-min_value = -1000.0
-max_value = 1000.0
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting/HSlider"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 1.0242)
-text = " 0"
-
-[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/YPositionSetting"]
-layout_mode = 2
-text = "Restablecer"
-
-[node name="ZPositionSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 100
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Posicion en Z"
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
-custom_minimum_size = Vector2(830, 0)
-layout_mode = 2
-min_value = -1000.0
-max_value = 1000.0
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting/HSlider"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -9.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -13.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1, 1.0242)
-text = " 0"
-
-[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/ZPositionSetting"]
-layout_mode = 2
-text = "Restablecer"
-
-[node name="ScaleSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 100
-
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Escala            "
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting"]
+[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/HSensitivitySetting" groups=["HSlider"]]
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 value = 50.0
 
-[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ScaleSetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/HSensitivitySetting/HSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -6.0
-offset_top = -39.0
-offset_right = 32.0
-offset_bottom = -16.0
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 1.0242)
-text = "1"
+text = "50"
 
-[node name="AcceptButton" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+[node name="VSensitivitySetting" type="HBoxContainer" parent="CanvasLayer/CharacterOptions/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 232
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/VSensitivitySetting"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Sensibilidad vertical      "
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/VSensitivitySetting" groups=["HSlider"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/VSensitivitySetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -37.0
+offset_right = 28.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = "50"
+
+[node name="ModelOptions" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -601.0
+offset_bottom = -695.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_2xl6y")
+
+[node name="TabBar" type="TabBar" parent="CanvasLayer/ModelOptions"]
+layout_mode = 1
+offset_left = 537.09
+offset_right = 801.091
+offset_bottom = 40.0
+tab_count = 3
+tab_alignment = 1
+tab_0/title = "Posición"
+tab_1/title = "Rotación"
+tab_2/title = "Escala"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ModelOptions"]
+layout_mode = 1
+offset_top = 100.0
+offset_right = 1288.0
+offset_bottom = 517.0
+theme_override_constants/separation = 50
+
+[node name="XSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting" groups=["ModelLabels"]]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posición en X"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting" groups=["ModelSliders"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/XSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="YSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting" groups=["ModelLabels"]]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posición en Y"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting" groups=["ModelSliders"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/YSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="ZSetting" type="HBoxContainer" parent="CanvasLayer/ModelOptions/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting" groups=["ModelLabels"]]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Posición en Z"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting" groups=["ModelSliders"]]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+min_value = -1000.0
+max_value = 1000.0
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -36.0
+offset_right = 31.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+text = " 0"
+
+[node name="Button" type="Button" parent="CanvasLayer/ModelOptions/VBoxContainer/ZSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="AcceptButton" type="Button" parent="CanvasLayer/ModelOptions"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+offset_right = 1288.0
+grow_vertical = 0
 theme_override_font_sizes/font_size = 20
 text = "Aceptar"
 
 [connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ModelButton" to="." method="_on_model_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/CharacterButton" to="." method="_on_character_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/SceneryButton" to="." method="_on_scenery_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="toggled" from="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/CheckButton" to="." method="_on_fly_button_toggled"]
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider" to="." method="_on_speed_slider_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider" to="." method="_on_jump_slider_value_changed"]
-[connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]
+[connection signal="tab_changed" from="CanvasLayer/ModelOptions/TabBar" to="CanvasLayer/ModelOptions" method="_on_tab_bar_tab_changed"]
+[connection signal="pressed" from="CanvasLayer/ModelOptions/AcceptButton" to="." method="_on_resume_button_pressed"]

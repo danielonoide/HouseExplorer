@@ -26,7 +26,6 @@ public partial class Player : CharacterBody3D
 
 	Joystick joystick;
 
-
 	public override void _Ready()
 	{
 		camera3D=GetNode<Camera3D>("Camera3D");
