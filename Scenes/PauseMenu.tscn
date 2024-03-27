@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cwdfpow5x006k"]
+[gd_scene load_steps=6 format=3 uid="uid://cwdfpow5x006k"]
 
 [ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
 [ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_x0ua1"]
 [ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_7ngek"]
 [ext_resource type="Script" path="res://Scripts/ModelOptions.cs" id="4_2xl6y"]
+[ext_resource type="Script" path="res://Scripts/SceneryMenu.cs" id="5_tn63c"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -159,7 +160,8 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 200
 
-[node name="CheckButton" type="CheckButton" parent="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting"]
+[node name="FlyToggleButton" type="CheckButton" parent="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 785
 theme_override_font_sizes/font_size = 25
@@ -175,7 +177,8 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Velocidad"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting"]
+[node name="SpeedSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 min_value = 0.1
@@ -183,7 +186,7 @@ max_value = 5.0
 step = 0.1
 value = 1.0
 
-[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/SpeedSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -209,7 +212,8 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Velocidad del salto"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting"]
+[node name="JumpSlider" type="HSlider" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 min_value = 0.1
@@ -217,7 +221,7 @@ max_value = 5.0
 step = 0.1
 value = 1.0
 
-[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/JumpSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -473,6 +477,333 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Aceptar"
 
+[node name="SceneryMenu" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_tn63c")
+
+[node name="LabelContainer" type="CenterContainer" parent="CanvasLayer/SceneryMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -961.0
+offset_right = 961.0
+offset_bottom = 110.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LabelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Escenario"
+
+[node name="TabBar" type="TabBar" parent="CanvasLayer/SceneryMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -863.0
+offset_top = 110.0
+offset_right = -492.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+tab_count = 3
+tab_0/title = "Terreno"
+tab_1/title = "Fondo"
+tab_2/title = "Iluminación"
+
+[node name="LandMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
+visible = false
+layout_mode = 1
+anchors_preset = 0
+offset_left = 95.0
+offset_top = 157.0
+offset_right = 1811.0
+offset_bottom = 1075.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 46.0
+offset_right = 1670.0
+offset_bottom = 232.0
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Tamaño:"
+
+[node name="WidthEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "100"
+max_length = 5
+
+[node name="Label2" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "M.    X  "
+
+[node name="HeightEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "100"
+max_length = 5
+
+[node name="Label3" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "M."
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Triplanar:"
+
+[node name="TriplanarButton" type="CheckButton" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Textura:"
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/LandMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -844.5
+offset_top = -621.0
+offset_right = 844.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BgMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 95.0
+offset_top = 157.0
+offset_right = 1811.0
+offset_bottom = 1075.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/BgMenu"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 64.0
+offset_right = 1684.0
+offset_bottom = 350.0
+theme_override_constants/separation = 20
+
+[node name="BrightnessSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Brillo:"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "1"
+
+[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Textura:"
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/BgMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -835.0
+offset_top = -671.0
+offset_right = 835.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LightingMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 95.0
+offset_top = 157.0
+offset_right = 1811.0
+offset_bottom = 1075.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu"]
+offset_left = 38.0
+offset_top = 64.0
+offset_right = 1684.0
+offset_bottom = 350.0
+theme_override_constants/separation = 50
+
+[node name="EnergySetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Intensidad de la luz:"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "1"
+
+[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="TimeSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Hora:                          "
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+custom_minimum_size = Vector2(830, 0)
+layout_mode = 2
+max_value = 360.0
+value = 90.0
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting/HSlider"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -53.0
+offset_right = 9.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0242)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 34
+text = "12 pm"
+
+[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+layout_mode = 2
+text = "Restablecer"
+
+[node name="ColorSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 165
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Color de la luz:"
+
+[node name="ColorPicker" type="ColorPicker" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting"]
+custom_minimum_size = Vector2(833.855, 0)
+layout_mode = 2
+
 [connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
@@ -481,9 +812,13 @@ text = "Aceptar"
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/CharacterButton" to="." method="_on_character_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/SceneryButton" to="." method="_on_scenery_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="toggled" from="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/CheckButton" to="." method="_on_fly_button_toggled"]
-[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider" to="." method="_on_speed_slider_value_changed"]
-[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider" to="." method="_on_jump_slider_value_changed"]
+[connection signal="toggled" from="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/FlyToggleButton" to="." method="_on_fly_button_toggled"]
+[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/JumpSlider" to="." method="_on_jump_slider_value_changed"]
 [connection signal="tab_changed" from="CanvasLayer/ModelOptions/TabBar" to="CanvasLayer/ModelOptions" method="_on_tab_bar_tab_changed"]
 [connection signal="toggled" from="CanvasLayer/ModelOptions/VBoxContainer/ProportionSetting/CheckButton" to="CanvasLayer/ModelOptions" method="_on_proportion_button_toggled"]
 [connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]
+[connection signal="tab_changed" from="CanvasLayer/SceneryMenu/TabBar" to="CanvasLayer/SceneryMenu" method="_on_tab_bar_tab_changed"]
+[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/WidthEdit" to="CanvasLayer/SceneryMenu" method="_on_width_edit_text_changed"]
+[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/HeightEdit" to="CanvasLayer/SceneryMenu" method="_on_height_edit_text_changed"]
+[connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]

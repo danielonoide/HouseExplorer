@@ -12,11 +12,11 @@ public partial class PauseMenu : Control
 	CheckButton flyButton;
 	Label[] labels = new Label[2];
 
-	private const float hAdjustment = 10000f;
-	private const float vAdjustment = 5000f;
+	private const float HAdjustment = 10000f;
+	private const float VAdjustment = 5000f;
 
 	GameManager gameManager;
-	Control mainMenuControl, characterOptionsControl, modelOptionsControl;
+	Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl;
 	TextureButton backButton;
 	ColorRect colorRect;
 
@@ -26,12 +26,13 @@ public partial class PauseMenu : Control
 		mainMenuControl = GetNode<Control>("CanvasLayer/MainMenu");
 		characterOptionsControl = GetNode<Control>("CanvasLayer/CharacterOptions");
 		modelOptionsControl = GetNode<Control>("CanvasLayer/ModelOptions");
+		sceneryOptionsControl = GetNode<Control>("CanvasLayer/SceneryMenu");
 		backButton = GetNode<TextureButton>("CanvasLayer/BackButton");
-		jumpSlider = GetNode<HSlider>("CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider");
-		jumpSliderLabel = GetNode<Label>("CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/HSlider/Label");
-		speedSlider = GetNode<HSlider>("CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider");
-		speedSliderLabel = GetNode<Label>("CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/HSlider/Label");
-		flyButton = GetNode<CheckButton>("CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/CheckButton");
+		jumpSlider = GetNode<HSlider>("%JumpSlider");
+		jumpSliderLabel = jumpSlider.GetChild<Label>(0);
+		speedSlider = GetNode<HSlider>("%SpeedSlider");
+		speedSliderLabel = speedSlider.GetChild<Label>(0);
+		flyButton = GetNode<CheckButton>("%FlyToggleButton");
 
 		colorRect = GetNode<ColorRect>("CanvasLayer/ColorRect");
 
@@ -55,8 +56,8 @@ public partial class PauseMenu : Control
 			labels[i] = hSlider.GetChild<Label>(0);
         }
 
-		sensitivitySliders[0].Value = Player.HSensitivity * hAdjustment;
-		sensitivitySliders[1].Value = Player.VSensitivity * vAdjustment;
+		sensitivitySliders[0].Value = Player.HSensitivity * HAdjustment;
+		sensitivitySliders[1].Value = Player.VSensitivity * VAdjustment;
 
 		labels[0].Text = sensitivitySliders[0].Value.ToString();
 		labels[1].Text = sensitivitySliders[1].Value.ToString();
@@ -74,11 +75,11 @@ public partial class PauseMenu : Control
 
 		if(sliderIndex == 0)
 		{
-			Player.HSensitivity = (float)(value / hAdjustment);
+			Player.HSensitivity = (float)(value / HAdjustment);
 			return;
 		}
 		
-		Player.VSensitivity = (float)(value / vAdjustment);
+		Player.VSensitivity = (float)(value / VAdjustment);
 	}
 
 	private void _on_resume_button_pressed()
@@ -132,7 +133,6 @@ public partial class PauseMenu : Control
 		backButton.Visible = false;
 		modelOptionsControl.Visible = true;
 		colorRect.Visible = false;
-		//GetTree().Paused = false;
 	}
 
 	private void _on_character_button_pressed()
@@ -144,15 +144,17 @@ public partial class PauseMenu : Control
 
 	private void _on_scenery_button_pressed()
 	{
-		
+		mainMenuControl.Visible = false;
+		backButton.Visible = true;
+		sceneryOptionsControl.Visible = true;
 	}
-
 
 	private void _on_back_button_pressed()
 	{
 		mainMenuControl.Visible = true;
 		backButton.Visible = false;
 		characterOptionsControl.Visible = false;
+		sceneryOptionsControl.Visible = false;
 	}
 
 	private void _on_speed_slider_value_changed(float value)

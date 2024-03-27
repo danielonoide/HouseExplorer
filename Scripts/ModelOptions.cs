@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Linq;
-
 public partial class ModelOptions : Control
 {
     enum SliderType
@@ -19,7 +18,6 @@ public partial class ModelOptions : Control
     Button[] restartButtons = new Button[3];
     Vector3 ChangingVector {get=>new((float)modelSliders[0].Value, (float)modelSliders[1].Value, (float)modelSliders[2].Value);}
 
-
     HBoxContainer proportionSetting;
 	public override void _Ready()
     {
@@ -27,7 +25,6 @@ public partial class ModelOptions : Control
 
         modelSliders = GetTree().GetNodesInGroup("ModelSliders").Select(s => s as HSlider).ToArray();
         modelLabels = GetTree().GetNodesInGroup("ModelLabels").Select(s => s as Label).ToArray();
-        
 
         for(int i=0; i<modelSliders.Length; i++)
         {

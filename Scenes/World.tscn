@@ -26,10 +26,10 @@ albedo_texture = ExtResource("3_kt30b")
 uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_y581j"]
-size = Vector2(100, 100)
+size = Vector2(50, 50)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yqeb8"]
-size = Vector3(100, 0.1, 100)
+size = Vector3(50, 0.1, 50)
 
 [sub_resource type="Image" id="Image_ktb6q"]
 data = {
@@ -164,11 +164,10 @@ mesh = SubResource("PlaneMesh_y581j")
 shape = SubResource("BoxShape3D_yqeb8")
 
 [node name="Player" parent="." instance=ExtResource("2_8sg6e")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0387422, 1.32991, -31.0553)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0387422, 1.32991, -20.8034)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.406737, -0.645974, -0.645974, 6.18172e-08, -0.707107, 0.707107, -0.913545, -0.287607, -0.287607, -1500.82, 1622.67, -618.965)
-light_energy = 2.005
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 200, 0)
 
 [node name="CurrentModel" parent="." instance=ExtResource("5_8aq0p")]
 

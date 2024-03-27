@@ -15,7 +15,21 @@ public partial class World : Node3D
 	string[] supportedFiles = {"gltf", "glb", "obj"};//, "fbx", "dae", "obj};
 
 	static PlaneMesh floorMesh;
-	public static Vector2 FloorSize {get=> floorMesh.Size; set=>floorMesh.Size = value;}
+	static BoxShape3D floorCollision;
+	public static Vector2 FloorSize 
+	{
+		get=> floorMesh.Size; 
+	
+		set
+		{
+			floorMesh.Size = value;
+			floorCollision.Size = new Vector3(value.X, 0.1f, value.Y);
+		}
+	}
+
+	static StandardMaterial3D floorTexture;
+
+	public static bool TriplanarFloorTexture {get=> floorTexture.Uv1Triplanar; set=>floorTexture.Uv1Triplanar = value;}
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -30,6 +44,9 @@ public partial class World : Node3D
 		fileDialog.Invalidate();
 
 		floorMesh = GetNode<MeshInstance3D>("Floor").Mesh as PlaneMesh;
+		floorCollision = GetNode<CollisionShape3D>("Floor/StaticBody3D/CollisionShape3D").Shape as BoxShape3D;
+
+		floorTexture = GetNode<MeshInstance3D>("Floor").MaterialOverlay as StandardMaterial3D;
 
 		if(!GameManager.IsMobile)
 		{
