@@ -488,6 +488,16 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("5_tn63c")
 
+[node name="FileDialog" type="FileDialog" parent="CanvasLayer/SceneryMenu"]
+title = "Selecciona una textura"
+initial_position = 2
+size = Vector2i(1000, 500)
+ok_button_text = "Open"
+cancel_button_text = "Cancelar"
+mode_overrides_title = false
+file_mode = 0
+access = 2
+
 [node name="LabelContainer" type="CenterContainer" parent="CanvasLayer/SceneryMenu"]
 layout_mode = 1
 anchors_preset = 5
@@ -521,7 +531,6 @@ tab_1/title = "Fondo"
 tab_2/title = "Iluminación"
 
 [node name="LandMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
-visible = false
 layout_mode = 1
 anchors_preset = 0
 offset_left = 95.0
@@ -588,18 +597,37 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Textura:"
 
-[node name="ItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/LandMenu"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="AddTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Agregar nueva textura"
+
+[node name="RemoveTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Eliminar textura seleccionada"
+
+[node name="LandItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/LandMenu"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -844.5
-offset_top = -621.0
-offset_right = 844.5
+offset_left = -844.0
+offset_top = -584.0
+offset_right = 845.0
 grow_horizontal = 2
 grow_vertical = 0
+max_columns = 5
+fixed_column_width = 200
+icon_mode = 0
+fixed_icon_size = Vector2i(200, 200)
 
 [node name="BgMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 visible = false
@@ -694,6 +722,7 @@ offset_right = 1811.0
 offset_bottom = 1075.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu"]
+layout_mode = 0
 offset_left = 38.0
 offset_top = 64.0
 offset_right = 1684.0
@@ -818,7 +847,11 @@ layout_mode = 2
 [connection signal="tab_changed" from="CanvasLayer/ModelOptions/TabBar" to="CanvasLayer/ModelOptions" method="_on_tab_bar_tab_changed"]
 [connection signal="toggled" from="CanvasLayer/ModelOptions/VBoxContainer/ProportionSetting/CheckButton" to="CanvasLayer/ModelOptions" method="_on_proportion_button_toggled"]
 [connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]
+[connection signal="file_selected" from="CanvasLayer/SceneryMenu/FileDialog" to="CanvasLayer/SceneryMenu" method="_on_file_dialog_file_selected"]
 [connection signal="tab_changed" from="CanvasLayer/SceneryMenu/TabBar" to="CanvasLayer/SceneryMenu" method="_on_tab_bar_tab_changed"]
 [connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/WidthEdit" to="CanvasLayer/SceneryMenu" method="_on_width_edit_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/HeightEdit" to="CanvasLayer/SceneryMenu" method="_on_height_edit_text_changed"]
 [connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3/AddTextureButton" to="CanvasLayer/SceneryMenu" method="_on_add_texture_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3/RemoveTextureButton" to="CanvasLayer/SceneryMenu" method="_on_remove_texture_button_pressed"]
+[connection signal="item_selected" from="CanvasLayer/SceneryMenu/LandMenu/LandItemList" to="CanvasLayer/SceneryMenu" method="_on_land_item_list_item_selected"]

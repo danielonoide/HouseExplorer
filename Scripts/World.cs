@@ -27,9 +27,11 @@ public partial class World : Node3D
 		}
 	}
 
-	static StandardMaterial3D floorTexture;
+	static StandardMaterial3D floorMaterial;
+	public static bool TriplanarFloorMaterial {get=> floorMaterial.Uv1Triplanar; set=>floorMaterial.Uv1Triplanar = value;}
+	public static Texture2D FloorTexture {get=>floorMaterial.AlbedoTexture; set=>floorMaterial.AlbedoTexture = value;}
 
-	public static bool TriplanarFloorTexture {get=> floorTexture.Uv1Triplanar; set=>floorTexture.Uv1Triplanar = value;}
+
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -46,7 +48,7 @@ public partial class World : Node3D
 		floorMesh = GetNode<MeshInstance3D>("Floor").Mesh as PlaneMesh;
 		floorCollision = GetNode<CollisionShape3D>("Floor/StaticBody3D/CollisionShape3D").Shape as BoxShape3D;
 
-		floorTexture = GetNode<MeshInstance3D>("Floor").MaterialOverlay as StandardMaterial3D;
+		floorMaterial = GetNode<MeshInstance3D>("Floor").MaterialOverlay as StandardMaterial3D;
 
 		if(!GameManager.IsMobile)
 		{
@@ -121,7 +123,7 @@ public partial class World : Node3D
 
 		if (!supportedFiles.Contains(extension))
 		{
-			OS.Alert($"Archivo no soportado: {extension}");
+			OS.Alert($"Archivo no soportado: {extension}", "Alerta");
 			Input.MouseMode = Input.MouseModeEnum.Captured;
 			return;
 		}
@@ -140,7 +142,7 @@ public partial class World : Node3D
 		}
 		catch (InvalidCastException invalidCastException)
 		{
-			OS.Alert($"Error al cargar el archivo: {invalidCastException.Message}");
+			OS.Alert($"Error al cargar el archivo: {invalidCastException.Message}", "ERROR");
 		}
 		finally
 		{
@@ -199,7 +201,7 @@ public partial class World : Node3D
 		}
 		else
 		{
-			OS.Alert("No se puedo procesar el archivo GLTF");
+			OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
 		}
 
 	}
@@ -313,6 +315,5 @@ public partial class World : Node3D
 	{
 		fileDialog.Visible = true;
 	}
-
 
 }
