@@ -53,6 +53,10 @@ public partial class World : Node3D
 			panoramaSkyMaterial.Panorama = value;
 		}
 	}
+
+	//lighting
+	public static Color LightColor {get=> light3D.LightColor; set=> light3D.LightColor = value;}
+
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;

@@ -57,6 +57,8 @@ public partial class SceneryMenu : Control
     private HSlider _lightEnergySlider;
     private Label _lightEnergyLabel;
 
+    private ColorPicker _colorPicker;
+
     public override void _Ready()
     {
         _tabMenus[Tab.Land] = GetNode<Control>("LandMenu");
@@ -93,6 +95,9 @@ public partial class SceneryMenu : Control
         _lightEnergyLabel = _lightEnergySlider.GetChild<Label>(0);
 
         _lightEnergySlider.Value = World.LightEnergy;
+
+        _colorPicker = GetNode<ColorPicker>("%ColorPicker");
+        _colorPicker.Color = World.LightColor;
     }
 
     private void CreateFolder(string path, string folderName)
@@ -212,7 +217,7 @@ public partial class SceneryMenu : Control
     {
         if(_selectedItem == null)
         {
-            OS.Alert("No hay ninguna textura seleccionada", "Seleccionad una textura");
+            OS.Alert("No hay ninguna textura seleccionada", "Selecciona una textura");
             return;
         }
 
@@ -342,6 +347,11 @@ public partial class SceneryMenu : Control
     {
         World.LightEnergy = value;
         _lightEnergyLabel.Text = value.ToString();
+    }
+
+    private void _on_color_picker_color_changed(Color color)
+    {
+        World.LightColor = color;
     }
     
 }

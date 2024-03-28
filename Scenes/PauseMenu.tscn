@@ -740,7 +740,7 @@ offset_left = 38.0
 offset_top = 64.0
 offset_right = 1684.0
 offset_bottom = 350.0
-theme_override_constants/separation = 50
+theme_override_constants/separation = 70
 
 [node name="EnergySetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
 layout_mode = 2
@@ -832,7 +832,7 @@ text = "Restablecer"
 
 [node name="ColorSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 165
+theme_override_constants/separation = 200
 
 [node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting"]
 layout_mode = 2
@@ -844,6 +844,7 @@ theme_override_font_sizes/font_size = 25
 text = "Color de la luz:"
 
 [node name="ColorPicker" type="ColorPicker" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(833.855, 0)
 layout_mode = 2
 
@@ -871,3 +872,4 @@ layout_mode = 2
 [connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]
 [connection signal="value_changed" from="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/BgBrightSlider" to="CanvasLayer/SceneryMenu" method="_on_bg_bright_slider_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/LightEnergySlider" to="CanvasLayer/SceneryMenu" method="_on_light_energy_slider_value_changed"]
+[connection signal="color_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting/ColorPicker" to="CanvasLayer/SceneryMenu" method="_on_color_picker_color_changed"]
