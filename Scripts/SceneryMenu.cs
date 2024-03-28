@@ -11,7 +11,13 @@ using Godot.Collections;
 public partial class SceneryMenu : Control
 {
     private const string FloorTexturesFolderName = "FloorTextures";
-    private const string TexturesPath = $"user://{FloorTexturesFolderName}/";
+    private const string BackgroundTexturesFolderName = "BackgroundTextures";
+
+    private const string FloorTexturesPath = $"user://{FloorTexturesFolderName}/";
+    private const string BackgroundTexturesPath = $"user://{BackgroundTexturesFolderName}/";
+
+
+    private Control _textureSelector;
 
     private enum Tab
     {
@@ -30,7 +36,10 @@ public partial class SceneryMenu : Control
 
     private Vector2 NewFloorSize => new((float)Convert.ToDouble(_widthEdit.Text), (float)Convert.ToDouble(_heightEdit.Text));
 
-    private ItemList _landItemList;
+    private Texture2D _landTexture = GD.Load<Texture2D>("res://Assets/Images/floor_texture.png");
+    private Texture2D _backgroundTexture = GD.Load<Texture2D>("res://Assets/Images/panorama_image.png");
+
+    private ItemList _itemList;
 
     private int? _selectedItem = null;
 
@@ -39,6 +48,14 @@ public partial class SceneryMenu : Control
     private string[] _supportedImageFormats = {"png", "jpg", "webp"};  
 
     private System.Collections.Generic.Dictionary<int, string> _textureFileNames = new();
+
+    //Background
+    private HSlider _bgBrightSlider;
+    private Label _bgBrightLabel;
+
+    //Lighting
+    private HSlider _lightEnergySlider;
+    private Label _lightEnergyLabel;
 
     public override void _Ready()
     {
@@ -56,16 +73,26 @@ public partial class SceneryMenu : Control
         _triplanarButton.ButtonPressed = World.TriplanarFloorMaterial;
 
 
-        _landItemList = GetNode<ItemList>("%LandItemList");
+        _itemList = GetNode<ItemList>("%ItemList");
 
-        Texture2D _landTexture = GD.Load<Texture2D>("res://Assets/Images/floor_texture.png");
-        _landItemList.AddIconItem(_landTexture);
-
+        _textureSelector = GetNode<Control>("TextureSelector");
         _fileDialog = GetNode<FileDialog>("FileDialog");
 
-        LoadTextures();
+        //LoadTextures(FloorTexturesPath);
 
         ChangeTab(_currentTab);
+
+        //Background
+        _bgBrightSlider = GetNode<HSlider>("%BgBrightSlider");
+        _bgBrightLabel = _bgBrightSlider.GetChild<Label>(0);
+
+        _bgBrightSlider.Value = World.EnvironmentEnergy;
+        
+        //Lighting
+        _lightEnergySlider = GetNode<HSlider>("%LightEnergySlider");
+        _lightEnergyLabel = _lightEnergySlider.GetChild<Label>(0);
+
+        _lightEnergySlider.Value = World.LightEnergy;
     }
 
     private void CreateFolder(string path, string folderName)
@@ -80,9 +107,9 @@ public partial class SceneryMenu : Control
         dirAccess.MakeDir(folderName);
     }
 
-    private void LoadTextures()
+    private void LoadTextures(string path)
     {
-        DirAccess dirAccess = DirAccess.Open(TexturesPath);
+        DirAccess dirAccess = DirAccess.Open(path);
 
         if(dirAccess == null)
         {
@@ -93,12 +120,13 @@ public partial class SceneryMenu : Control
 
         foreach(var fileName in fileNames)
         {
-            string filePath = $"{TexturesPath}{fileName}";
+            string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}" ;
+            //GD.Print("Current Tab: ", _currentTab, " file Path: ", filePath);
             //filePath = ProjectSettings.GlobalizePath(filePath);
             
             var image = Image.LoadFromFile(filePath);
             Texture2D texture2D = ImageTexture.CreateFromImage(image);
-            int index = _landItemList.AddIconItem(texture2D);
+            int index = _itemList.AddIconItem(texture2D);
 
             _textureFileNames[index] = fileName;
         }
@@ -106,13 +134,26 @@ public partial class SceneryMenu : Control
 
     private void ChangeTab(Tab tab)
     {
+        _currentTab = tab;
+        _itemList.Clear();
+
+        if(tab == Tab.Land)
+        {
+            _itemList.AddIconItem(_landTexture);
+            LoadTextures(FloorTexturesPath);
+        }
+        else if(tab == Tab.Background)
+        {
+            _itemList.AddIconItem(_backgroundTexture);
+            LoadTextures(BackgroundTexturesPath);
+        }
+
         foreach (var menu in _tabMenus.Values)
         {
             menu.Visible = false;
         }
 
         _tabMenus[tab].Visible = true;
-        _currentTab = tab;
     }
 
     private void _on_tab_bar_tab_changed(int tab)
@@ -139,8 +180,16 @@ public partial class SceneryMenu : Control
     {
         _selectedItem = index;
 
-        Texture2D texture2D = _landItemList.GetItemIcon(index);   
-        World.FloorTexture = texture2D;
+        Texture2D texture2D = _itemList.GetItemIcon(index); 
+
+        if(_currentTab == Tab.Land)
+        {
+            World.FloorTexture = texture2D;
+        }  
+        else
+        {
+            World.BackgroundTexture = texture2D;
+        }
     }
 
     private void PrintDictionary()
@@ -154,9 +203,9 @@ public partial class SceneryMenu : Control
 
     private void _on_add_texture_button_pressed()
     {
-        CreateFolder("user://", FloorTexturesFolderName);
+        string folderName = _currentTab == Tab.Land ? FloorTexturesFolderName : BackgroundTexturesFolderName;
+        CreateFolder("user://", folderName);
         _fileDialog.Visible = true;
-
     }
 
     private void _on_remove_texture_button_pressed()
@@ -172,20 +221,22 @@ public partial class SceneryMenu : Control
             OS.Alert("No se puede eliminar la textura predeterminada", "Error");
             return;
         }
-        
-        DirAccess dir = DirAccess.Open(TexturesPath);
+
+        string path = _currentTab == Tab.Land ? FloorTexturesPath : BackgroundTexturesPath;
+
+        DirAccess dir = DirAccess.Open(path);
         Error error = dir.Remove(_textureFileNames[_selectedItem.Value]);
 
         if(error == Error.Ok)
         {
-            _landItemList.RemoveItem(_selectedItem.Value);
+            _itemList.RemoveItem(_selectedItem.Value);
 
-            for(int i = _selectedItem.Value; i < _landItemList.ItemCount; i++) //recorrer los índices
+            for(int i = _selectedItem.Value; i < _itemList.ItemCount; i++) //recorrer los índices
             {
-s                _textureFileNames[i] = _textureFileNames[i+1];
+                _textureFileNames[i] = _textureFileNames[i+1];
             }
 
-            _textureFileNames.Remove(_landItemList.ItemCount);
+            _textureFileNames.Remove(_itemList.ItemCount);
             _selectedItem = null;
             return;
         }
@@ -207,12 +258,20 @@ s                _textureFileNames[i] = _textureFileNames[i+1];
         var image = Image.LoadFromFile(path);
         var imageTexture = ImageTexture.CreateFromImage(image);
 
-        int index = _landItemList.AddIconItem(imageTexture);
-        _landItemList.Select(index);
+        int index = _itemList.AddIconItem(imageTexture);
+        _itemList.Select(index);
         _selectedItem = index;
-        World.FloorTexture = imageTexture;
+
+        if(_currentTab == Tab.Land)
+        {       
+            World.FloorTexture = imageTexture;
+        }
+        else
+        {
+            World.BackgroundTexture = imageTexture;
+        }
         
-        string fileName = $"textura{_landItemList.ItemCount}.{extension}";
+        string fileName = $"textura{_itemList.ItemCount}.{extension}";
         SaveImage(image, extension, index, fileName);
 
     }
@@ -248,8 +307,7 @@ s                _textureFileNames[i] = _textureFileNames[i+1];
         }
 
         _textureFileNames[index] = fileName;
-        string filePath = $"{TexturesPath}{fileName}";
-
+        string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}";
 
 /*         extension = extension.Capitalize();
         image.Call($"Save{extension}", filePath); */
@@ -269,4 +327,21 @@ s                _textureFileNames[i] = _textureFileNames[i+1];
                 break;
         }
     }
+
+    //background
+    private void _on_bg_bright_slider_value_changed(float value)
+    {
+        World.EnvironmentEnergy = value;
+        _bgBrightLabel.Text = value.ToString();
+    }
+
+
+
+    //lighting
+    private void _on_light_energy_slider_value_changed(float value)
+    {
+        World.LightEnergy = value;
+        _lightEnergyLabel.Text = value.ToString();
+    }
+    
 }

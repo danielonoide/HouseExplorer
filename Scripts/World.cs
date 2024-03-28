@@ -31,7 +31,28 @@ public partial class World : Node3D
 	public static bool TriplanarFloorMaterial {get=> floorMaterial.Uv1Triplanar; set=>floorMaterial.Uv1Triplanar = value;}
 	public static Texture2D FloorTexture {get=>floorMaterial.AlbedoTexture; set=>floorMaterial.AlbedoTexture = value;}
 
+	static DirectionalLight3D light3D;
 
+	public static float LightEnergy {get => light3D.LightEnergy; set=> light3D.LightEnergy = value;}
+
+	static Godot.Environment environment;
+
+	public static float EnvironmentEnergy {get => environment.BackgroundEnergyMultiplier; set=> environment.BackgroundEnergyMultiplier= value;}
+
+	static PanoramaSkyMaterial panoramaSkyMaterial;
+
+	public static Texture2D BackgroundTexture
+	{
+		get
+		{
+			return panoramaSkyMaterial.Panorama;
+		}
+
+		set
+		{
+			panoramaSkyMaterial.Panorama = value;
+		}
+	}
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -49,6 +70,10 @@ public partial class World : Node3D
 		floorCollision = GetNode<CollisionShape3D>("Floor/StaticBody3D/CollisionShape3D").Shape as BoxShape3D;
 
 		floorMaterial = GetNode<MeshInstance3D>("Floor").MaterialOverlay as StandardMaterial3D;
+		light3D = GetNode<DirectionalLight3D>("DirectionalLight3D");
+
+		environment = GetNode<WorldEnvironment>("WorldEnvironment").Environment;
+		panoramaSkyMaterial = environment.Sky.SkyMaterial as PanoramaSkyMaterial;
 
 		if(!GameManager.IsMobile)
 		{

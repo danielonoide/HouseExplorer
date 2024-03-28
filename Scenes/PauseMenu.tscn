@@ -530,6 +530,59 @@ tab_0/title = "Terreno"
 tab_1/title = "Fondo"
 tab_2/title = "Iluminación"
 
+[node name="TextureSelector" type="Control" parent="CanvasLayer/SceneryMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/TextureSelector"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -100.575
+offset_right = 350.0
+offset_bottom = -57.575
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="AddTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Agregar nueva textura"
+
+[node name="RemoveTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Eliminar textura seleccionada"
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/TextureSelector"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -844.5
+offset_top = -584.0
+offset_right = 844.5
+grow_horizontal = 2
+grow_vertical = 0
+max_columns = 5
+fixed_column_width = 200
+icon_mode = 0
+fixed_icon_size = Vector2i(200, 200)
+
 [node name="LandMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 layout_mode = 1
 anchors_preset = 0
@@ -537,6 +590,7 @@ offset_left = 95.0
 offset_top = 157.0
 offset_right = 1811.0
 offset_bottom = 1075.0
+mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu"]
 layout_mode = 0
@@ -597,38 +651,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Textura:"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 50
-
-[node name="AddTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Agregar nueva textura"
-
-[node name="RemoveTextureButton" type="Button" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Eliminar textura seleccionada"
-
-[node name="LandItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/LandMenu"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -844.0
-offset_top = -584.0
-offset_right = 845.0
-grow_horizontal = 2
-grow_vertical = 0
-max_columns = 5
-fixed_column_width = 200
-icon_mode = 0
-fixed_icon_size = Vector2i(200, 200)
-
 [node name="BgMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 visible = false
 layout_mode = 3
@@ -637,6 +659,7 @@ offset_left = 95.0
 offset_top = 157.0
 offset_right = 1811.0
 offset_bottom = 1075.0
+mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/BgMenu"]
 layout_mode = 0
@@ -644,6 +667,7 @@ offset_left = 38.0
 offset_top = 64.0
 offset_right = 1684.0
 offset_bottom = 350.0
+mouse_filter = 2
 theme_override_constants/separation = 20
 
 [node name="BrightnessSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer"]
@@ -659,14 +683,15 @@ theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Brillo:"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+[node name="BgBrightSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/BgBrightSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -699,19 +724,6 @@ theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Textura:"
 
-[node name="ItemList" type="ItemList" parent="CanvasLayer/SceneryMenu/BgMenu"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -835.0
-offset_top = -671.0
-offset_right = 835.0
-grow_horizontal = 2
-grow_vertical = 0
-
 [node name="LightingMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 visible = false
 layout_mode = 3
@@ -720,6 +732,7 @@ offset_left = 95.0
 offset_top = 157.0
 offset_right = 1811.0
 offset_bottom = 1075.0
+mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu"]
 layout_mode = 0
@@ -742,14 +755,15 @@ theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Intensidad de la luz:"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+[node name="LightEnergySlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
 max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/LightEnergySlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -849,9 +863,11 @@ layout_mode = 2
 [connection signal="pressed" from="CanvasLayer/ModelOptions/VBoxContainer/AcceptButton" to="." method="_on_resume_button_pressed"]
 [connection signal="file_selected" from="CanvasLayer/SceneryMenu/FileDialog" to="CanvasLayer/SceneryMenu" method="_on_file_dialog_file_selected"]
 [connection signal="tab_changed" from="CanvasLayer/SceneryMenu/TabBar" to="CanvasLayer/SceneryMenu" method="_on_tab_bar_tab_changed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer/AddTextureButton" to="CanvasLayer/SceneryMenu" method="_on_add_texture_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer/RemoveTextureButton" to="CanvasLayer/SceneryMenu" method="_on_remove_texture_button_pressed"]
+[connection signal="item_selected" from="CanvasLayer/SceneryMenu/TextureSelector/ItemList" to="CanvasLayer/SceneryMenu" method="_on_land_item_list_item_selected"]
 [connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/WidthEdit" to="CanvasLayer/SceneryMenu" method="_on_width_edit_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/HeightEdit" to="CanvasLayer/SceneryMenu" method="_on_height_edit_text_changed"]
 [connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]
-[connection signal="pressed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3/AddTextureButton" to="CanvasLayer/SceneryMenu" method="_on_add_texture_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer3/RemoveTextureButton" to="CanvasLayer/SceneryMenu" method="_on_remove_texture_button_pressed"]
-[connection signal="item_selected" from="CanvasLayer/SceneryMenu/LandMenu/LandItemList" to="CanvasLayer/SceneryMenu" method="_on_land_item_list_item_selected"]
+[connection signal="value_changed" from="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/BgBrightSlider" to="CanvasLayer/SceneryMenu" method="_on_bg_bright_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/LightEnergySlider" to="CanvasLayer/SceneryMenu" method="_on_light_energy_slider_value_changed"]
