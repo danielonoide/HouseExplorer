@@ -90,8 +90,26 @@ public partial class PauseMenu : Control
 
 	private void _on_restart_button_pressed()
 	{
-		GetTree().Paused = false;
-		GetTree().ReloadCurrentScene();
+/* 		GetTree().Paused = false;
+		GD.Print("Current scene: ", GetTree().CurrentScene.Name);
+		GD.Print(GetTree().ReloadCurrentScene()); */
+
+/* 		GetTree().Paused = false;
+		var rootChild = GetTree().Root.GetChild(3);
+
+		GD.Print("Root child: ", rootChild.Name);
+		rootChild.QueueFree();
+
+		var scene = GD.Load<PackedScene>("res://Scenes/World.tscn");
+		World world = scene.Instantiate<World>();
+
+		GetTree().Root.AddChild(world); */
+
+		//var executablePath = OS.GetExecutablePath();
+		//OS.Execute(executablePath, Array.Empty<string>());
+		
+		OS.CreateInstance(Array.Empty<string>());
+		GetTree().Quit();
 	}
 
 	private void _on_file_button_pressed()
@@ -147,6 +165,7 @@ public partial class PauseMenu : Control
 		mainMenuControl.Visible = false;
 		backButton.Visible = true;
 		sceneryOptionsControl.Visible = true;
+		colorRect.Visible = false;
 	}
 
 	private void _on_back_button_pressed()
@@ -155,6 +174,7 @@ public partial class PauseMenu : Control
 		backButton.Visible = false;
 		characterOptionsControl.Visible = false;
 		sceneryOptionsControl.Visible = false;
+		colorRect.Visible =  true;
 	}
 
 	private void _on_speed_slider_value_changed(float value)

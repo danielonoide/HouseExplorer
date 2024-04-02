@@ -53,11 +53,16 @@ public partial class SceneryMenu : Control
     private HSlider _bgBrightSlider;
     private Label _bgBrightLabel;
 
-    //Lighting
-    private HSlider _lightEnergySlider;
-    private Label _lightEnergyLabel;
+    private CheckButton _imageBgButton;
 
+    //Lighting
+    private HSlider _lightEnergySlider, _timeSlider;
+    private Label _lightEnergyLabel, _timeLabel;
+    private CheckButton _shadowButton;
     private ColorPicker _colorPicker;
+
+    private const float AngleOffset = 270;
+
 
     public override void _Ready()
     {
@@ -89,6 +94,9 @@ public partial class SceneryMenu : Control
         _bgBrightLabel = _bgBrightSlider.GetChild<Label>(0);
 
         _bgBrightSlider.Value = World.EnvironmentEnergy;
+
+        _imageBgButton = GetNode<CheckButton>("%ImageBgButton");
+        _imageBgButton.ButtonPressed = World.ImageBgEnabled;
         
         //Lighting
         _lightEnergySlider = GetNode<HSlider>("%LightEnergySlider");
@@ -96,8 +104,23 @@ public partial class SceneryMenu : Control
 
         _lightEnergySlider.Value = World.LightEnergy;
 
+        _shadowButton = GetNode<CheckButton>("%ShadowButton");
+        _shadowButton.ButtonPressed = World.LightShadow;
+
         _colorPicker = GetNode<ColorPicker>("%ColorPicker");
         _colorPicker.Color = World.LightColor;
+
+        _timeSlider = GetNode<HSlider>("%TimeSlider");
+        _timeLabel = _timeSlider.GetChild<Label>(0);
+
+
+        float timeDegrees = World.LightRotationX;
+        timeDegrees += AngleOffset;
+
+        float currTime = timeDegrees/360 *24;
+        _timeSlider.Value = currTime;
+
+       
     }
 
     private void CreateFolder(string path, string folderName)
@@ -141,16 +164,19 @@ public partial class SceneryMenu : Control
     {
         _currentTab = tab;
         _itemList.Clear();
+        _textureSelector.Visible = false;
 
         if(tab == Tab.Land)
         {
             _itemList.AddIconItem(_landTexture);
             LoadTextures(FloorTexturesPath);
+            _textureSelector.Visible = true;
         }
         else if(tab == Tab.Background)
         {
             _itemList.AddIconItem(_backgroundTexture);
             LoadTextures(BackgroundTexturesPath);
+            _textureSelector.Visible = _imageBgButton.ButtonPressed;
         }
 
         foreach (var menu in _tabMenus.Values)
@@ -197,14 +223,14 @@ public partial class SceneryMenu : Control
         }
     }
 
-    private void PrintDictionary()
+/*     private void PrintDictionary()
     {
         GD.Print("Diccionario: ");
         foreach(var KeyValuePair in _textureFileNames)
         {
             GD.Print("LLave: ", KeyValuePair.Key, " Valor: ", KeyValuePair.Value);
         }
-    }
+    } */
 
     private void _on_add_texture_button_pressed()
     {
@@ -340,7 +366,16 @@ public partial class SceneryMenu : Control
         _bgBrightLabel.Text = value.ToString();
     }
 
+    private void _on_bg_brightness_restart_button_pressed()
+    {
+        _bgBrightSlider.Value = 1;
+    }
 
+    private void _on_image_bg_button_toggled(bool toggled_on)
+    {
+        _textureSelector.Visible = toggled_on;
+        World.ImageBgEnabled = toggled_on;
+    }
 
     //lighting
     private void _on_light_energy_slider_value_changed(float value)
@@ -349,9 +384,56 @@ public partial class SceneryMenu : Control
         _lightEnergyLabel.Text = value.ToString();
     }
 
+    private void _on_light_energy_reset_button_pressed()
+    {
+        _lightEnergySlider.Value = 1;
+    }
+
     private void _on_color_picker_color_changed(Color color)
     {
         World.LightColor = color;
+    }
+
+    private void _on_restart_time_button_pressed()
+    {
+        _timeSlider.Value = 12;
+    }
+
+    private void _on_time_slider_value_changed(float militaryTime)
+    {
+        //float militaryTime = (value/360) * 24;
+        float time = militaryTime > 12 ? militaryTime % 12 : militaryTime;
+
+        string abbrev = militaryTime >= 12 ? "pm" : "am";
+
+        if(time == 0)
+        {
+            time = 12;
+        }
+
+        _timeLabel.Text = $"{time} {abbrev}";  
+
+        float degrees = (militaryTime/24) * 360;
+        degrees -= AngleOffset;
+        ChangeTime(degrees);
+    }
+
+    private void ChangeTime(float degrees)
+    {
+        float currRotation = World.LightRotationX;
+        float diff = degrees - currRotation;
+
+        //no es necesario cambiar la posición, solo el ángulo
+        //Vector2 newLightPos = World.LightPosition.Rotated(Mathf.DegToRad(diff));
+
+        //World.LightPosition = newLightPos;
+        World.LightRotationX = degrees;
+
+    }
+
+    private void _on_shadow_button_toggled(bool toggled_on)
+    {
+        World.LightShadow = toggled_on;
     }
     
 }

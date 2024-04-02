@@ -31,9 +31,8 @@ public partial class World : Node3D
 	public static bool TriplanarFloorMaterial {get=> floorMaterial.Uv1Triplanar; set=>floorMaterial.Uv1Triplanar = value;}
 	public static Texture2D FloorTexture {get=>floorMaterial.AlbedoTexture; set=>floorMaterial.AlbedoTexture = value;}
 
-	static DirectionalLight3D light3D;
 
-	public static float LightEnergy {get => light3D.LightEnergy; set=> light3D.LightEnergy = value;}
+	//background
 
 	static Godot.Environment environment;
 
@@ -41,21 +40,84 @@ public partial class World : Node3D
 
 	static PanoramaSkyMaterial panoramaSkyMaterial;
 
+	private static Texture2D  backgroundTexture;
+
 	public static Texture2D BackgroundTexture
 	{
 		get
 		{
-			return panoramaSkyMaterial.Panorama;
+			return backgroundTexture;
+			//return panoramaSkyMaterial.Panorama;
 		}
 
 		set
 		{
+			backgroundTexture = value;
 			panoramaSkyMaterial.Panorama = value;
 		}
 	}
 
+	public static bool ImageBgEnabled 
+	{
+		get
+		{
+			return environment.Sky.SkyMaterial is PanoramaSkyMaterial;
+		}
+
+		set
+		{
+			if(value)
+			{
+                panoramaSkyMaterial = new()
+                {
+                    Panorama = backgroundTexture
+                };
+
+                environment.Sky.SkyMaterial = panoramaSkyMaterial;
+			}
+			else
+			{
+				environment.Sky.SkyMaterial = new ProceduralSkyMaterial();
+			}
+		}
+	}
+
 	//lighting
+
+	static DirectionalLight3D light3D;
+
+	public static float LightEnergy {get => light3D.LightEnergy; set=> light3D.LightEnergy = value;}
+
 	public static Color LightColor {get=> light3D.LightColor; set=> light3D.LightColor = value;}
+
+	public static Vector2 LightPosition 
+	{
+		get
+		{
+			return new Vector2(light3D.Position.X, light3D.Position.Y);
+		}
+		
+		set
+		{
+			light3D.Position = new(value.X, value.Y, 0);
+		}
+	}
+
+	public static float LightRotationX
+	{
+		get
+		{
+			return light3D.RotationDegrees.X;
+		}
+
+		set
+		{
+			//light3D.RotateX(value);
+			light3D.RotationDegrees = new Vector3(value, light3D.RotationDegrees.Y, light3D.RotationDegrees.Z);
+		}
+	}
+
+	public static bool LightShadow {get => light3D.ShadowEnabled; set=> light3D.ShadowEnabled = value;}
 
 	public override void _Ready()
 	{
@@ -77,7 +139,7 @@ public partial class World : Node3D
 		light3D = GetNode<DirectionalLight3D>("DirectionalLight3D");
 
 		environment = GetNode<WorldEnvironment>("WorldEnvironment").Environment;
-		panoramaSkyMaterial = environment.Sky.SkyMaterial as PanoramaSkyMaterial;
+		//panoramaSkyMaterial = environment.Sky.SkyMaterial as PanoramaSkyMaterial;
 
 		if(!GameManager.IsMobile)
 		{
@@ -90,10 +152,6 @@ public partial class World : Node3D
 			fileDialog.RootSubfolder = OS.GetSystemDir(OS.SystemDir.Downloads, true);
 		}
 
-	}
-
-	public override void _Process(double delta)
-	{
 	}
 
 	private void ShowPauseMenu()
@@ -141,7 +199,7 @@ public partial class World : Node3D
 	private void _on_file_dialog_canceled()
 	{
         Input.MouseMode = Input.MouseModeEnum.Captured;
-		fileDialog.Visible = false;
+		//fileDialog.Visible = false;
 	}
 
 	private void _on_file_dialog_file_selected(string path)

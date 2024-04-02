@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cwdfpow5x006k"]
+[gd_scene load_steps=7 format=3 uid="uid://cwdfpow5x006k"]
 
 [ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
 [ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_x0ua1"]
 [ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_7ngek"]
 [ext_resource type="Script" path="res://Scripts/ModelOptions.cs" id="4_2xl6y"]
 [ext_resource type="Script" path="res://Scripts/SceneryMenu.cs" id="5_tn63c"]
+[ext_resource type="Theme" uid="uid://bua3cwomagsq8" path="res://Assets/Themes/OutlinedLabel.tres" id="6_nbfei"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -600,54 +601,58 @@ offset_right = 1670.0
 offset_bottom = 232.0
 theme_override_constants/separation = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+[node name="FloorSizeSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme = ExtResource("6_nbfei")
 text = "Tamaño:"
 
-[node name="WidthEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+[node name="WidthEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100"
 max_length = 5
 
-[node name="Label2" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_font_sizes/font_size = 30
 text = "M.    X  "
 
-[node name="HeightEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+[node name="HeightEdit" type="LineEdit" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100"
 max_length = 5
 
-[node name="Label3" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_font_sizes/font_size = 30
 text = "M."
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
+[node name="TriplanarSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/TriplanarSetting"]
 layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_font_sizes/font_size = 30
 text = "Triplanar:"
 
-[node name="TriplanarButton" type="CheckButton" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2"]
+[node name="TriplanarButton" type="CheckButton" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/TriplanarSetting"]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 
 [node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_font_sizes/font_size = 30
 text = "Textura:"
 
@@ -676,11 +681,9 @@ theme_override_constants/separation = 100
 
 [node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
 layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_constants/shadow_outline_size = 10
-theme_override_font_sizes/font_size = 25
 text = "Brillo:"
 
 [node name="BgBrightSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
@@ -711,18 +714,23 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 34
 text = "1"
 
-[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
+[node name="BgBrightnessRestartButton" type="Button" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting"]
 layout_mode = 2
 text = "Restablecer"
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer"]
+[node name="ImageBgSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/ImageBgSetting"]
+layout_mode = 2
+theme = ExtResource("6_nbfei")
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_constants/shadow_outline_size = 10
-theme_override_font_sizes/font_size = 25
-text = "Textura:"
+text = "Textura de fondo:  "
+
+[node name="ImageBgButton" type="CheckButton" parent="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/ImageBgSetting"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="LightingMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 visible = false
@@ -740,7 +748,7 @@ offset_left = 38.0
 offset_top = 64.0
 offset_right = 1684.0
 offset_bottom = 350.0
-theme_override_constants/separation = 70
+theme_override_constants/separation = 62
 
 [node name="EnergySetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
 layout_mode = 2
@@ -783,7 +791,7 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 34
 text = "1"
 
-[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
+[node name="LightEnergyResetButton" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting"]
 layout_mode = 2
 text = "Restablecer"
 
@@ -800,13 +808,14 @@ theme_override_constants/shadow_outline_size = 10
 theme_override_font_sizes/font_size = 25
 text = "Hora:                          "
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+[node name="TimeSlider" type="HSlider" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(830, 0)
 layout_mode = 2
-max_value = 360.0
-value = 90.0
+max_value = 23.0
+value = 12.0
 
-[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting/HSlider"]
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting/TimeSlider"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -826,9 +835,25 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 34
 text = "12 pm"
 
-[node name="Button" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
+[node name="RestartTimeButton" type="Button" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting"]
 layout_mode = 2
 text = "Restablecer"
+
+[node name="ShadowSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ShadowSetting"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_constants/shadow_outline_size = 10
+theme_override_font_sizes/font_size = 25
+text = "Sombra:     "
+
+[node name="ShadowButton" type="CheckButton" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ShadowSetting"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="ColorSetting" type="HBoxContainer" parent="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer"]
 layout_mode = 2
@@ -847,6 +872,8 @@ text = "Color de la luz:"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(833.855, 0)
 layout_mode = 2
+theme = ExtResource("6_nbfei")
+can_add_swatches = false
 
 [connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
@@ -867,9 +894,15 @@ layout_mode = 2
 [connection signal="pressed" from="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer/AddTextureButton" to="CanvasLayer/SceneryMenu" method="_on_add_texture_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/SceneryMenu/TextureSelector/HBoxContainer/RemoveTextureButton" to="CanvasLayer/SceneryMenu" method="_on_remove_texture_button_pressed"]
 [connection signal="item_selected" from="CanvasLayer/SceneryMenu/TextureSelector/ItemList" to="CanvasLayer/SceneryMenu" method="_on_land_item_list_item_selected"]
-[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/WidthEdit" to="CanvasLayer/SceneryMenu" method="_on_width_edit_text_changed"]
-[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer/HeightEdit" to="CanvasLayer/SceneryMenu" method="_on_height_edit_text_changed"]
-[connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/HBoxContainer2/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]
+[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting/WidthEdit" to="CanvasLayer/SceneryMenu" method="_on_width_edit_text_changed"]
+[connection signal="text_changed" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting/HeightEdit" to="CanvasLayer/SceneryMenu" method="_on_height_edit_text_changed"]
+[connection signal="toggled" from="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/TriplanarSetting/TriplanarButton" to="CanvasLayer/SceneryMenu" method="_on_triplanar_button_toggled"]
 [connection signal="value_changed" from="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/BgBrightSlider" to="CanvasLayer/SceneryMenu" method="_on_bg_bright_slider_value_changed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/BrightnessSetting/BgBrightnessRestartButton" to="CanvasLayer/SceneryMenu" method="_on_bg_brightness_restart_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/SceneryMenu/BgMenu/VBoxContainer/ImageBgSetting/ImageBgButton" to="CanvasLayer/SceneryMenu" method="_on_image_bg_button_toggled"]
 [connection signal="value_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/LightEnergySlider" to="CanvasLayer/SceneryMenu" method="_on_light_energy_slider_value_changed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/EnergySetting/LightEnergyResetButton" to="CanvasLayer/SceneryMenu" method="_on_light_energy_reset_button_pressed"]
+[connection signal="value_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting/TimeSlider" to="CanvasLayer/SceneryMenu" method="_on_time_slider_value_changed"]
+[connection signal="pressed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/TimeSetting/RestartTimeButton" to="CanvasLayer/SceneryMenu" method="_on_restart_time_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ShadowSetting/ShadowButton" to="CanvasLayer/SceneryMenu" method="_on_shadow_button_toggled"]
 [connection signal="color_changed" from="CanvasLayer/SceneryMenu/LightingMenu/VBoxContainer/ColorSetting/ColorPicker" to="CanvasLayer/SceneryMenu" method="_on_color_picker_color_changed"]
