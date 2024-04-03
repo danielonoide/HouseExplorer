@@ -14,6 +14,8 @@ public partial class GltfToImage : Node3D
     private Vector3 _axisPosition = Vector3.Zero;
     private Node3D _axis;
 
+    private const float Delay = 0.5f;
+
     public override void _Ready()
     {
         _subViewport = GetNode<SubViewport>("SubViewport");
@@ -33,30 +35,37 @@ public partial class GltfToImage : Node3D
         }
     }
 
+    public async Task SaveGltfImage(string gltfPath, string savePath)
+    {
+        Image image = await ConvertGltfToImage(gltfPath);
+        image.SavePng(savePath);
+    }
+
     public async Task<Image> ConvertGltfToImage(string gltfPath)
     {
-        GltfDocument gltfDocument = new();
-		GltfState gltfState = new();
-		var error = gltfDocument.AppendFromFile(gltfPath, gltfState);
-
-        if(error != Error.Ok)
-        {
-            OS.Alert("Error al convertir el modelo a imagen", "ERROR");
-            return null;
-        }
-
-        Node3D gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
+        Node3D gltfScene = FileManager.GenGltfScene(gltfPath) as Node3D;
         _axis.AddChild(gltfScene);
-/*         GetTree().CreateTimer(0.5f).Timeout +=  () => 
+
+        /*         GetTree().CreateTimer(0.5f).Timeout +=  () => 
         {
             var image = _subViewport.GetViewport().GetTexture().GetImage();
             image.SavePng(savePath);
         }; */
 
-        await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
-        Image image = _subViewport.GetViewport().GetTexture().GetImage();
+        await WaitForViewportUpdate();
+        Image image = GetViewportImage();
         gltfScene.QueueFree();
         return image;
+    }
+
+    private async Task WaitForViewportUpdate()
+    {
+        await ToSignal(GetTree().CreateTimer(Delay), "timeout");
+    }
+
+    private Image GetViewportImage()
+    {
+        return _subViewport.GetViewport().GetTexture().GetImage();
     }
 
     private async void _on_file_dialog_file_selected(string path)

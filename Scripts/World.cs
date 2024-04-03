@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 public partial class World : Node3D
 {
@@ -128,7 +130,7 @@ public partial class World : Node3D
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed += PauseMenuClosed;
 		gameManager.FileButtonPressed += FileButtonPressed;
-		gameManager.ModelSelected += OnModelSelected;
+		gameManager.ModelSelected += HandleGltfFile;
 
 		fileDialog = GetNode<FileDialog>("%FileDialog");
 		fileDialog.Invalidate();
@@ -154,6 +156,7 @@ public partial class World : Node3D
 		}
 
         FileManager.CreateFolder("user://", ModelSelection.ModelsFolderName);
+        FileManager.CreateFolder("user://", ModelSelection.ModelImagesFolderName);
 	}
 
 	private void ShowPauseMenu()
@@ -226,8 +229,7 @@ public partial class World : Node3D
 				return;
 			}
 			
-			HandleGltfFile(path);
-
+			HandleGltfFile(path, true);
 		}
 		catch (InvalidCastException invalidCastException)
 		{
@@ -277,74 +279,66 @@ public partial class World : Node3D
 		}
 	}
 
-	private string GetGltfSavePath(string fileName)
-	{
-		DirAccess dirAccess = DirAccess.Open(ModelSelection.ModelsFolderPath);
-		string[] fileNames = dirAccess.GetFiles();
-		string extension = fileName.GetExtension();
-		
-		fileName = fileName.Replace(extension, "glb");
-		fileName = FileManager.GetUniqueFileName(fileNames.ToHashSet(), fileName, "glb");
-		string filePath = $"{ModelSelection.ModelsFolderPath}{fileName}";
 
-/* 		if(extension.Equals("gltf"))
+    private async Task SaveGltfImage(string gltfPath, string savePath)
+    {
+        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0));
+        AddChild(gltfToImage);
+        await gltfToImage.SaveGltfImage(gltfPath, savePath);
+        gltfToImage.QueueFree();
+
+		gameManager.EmitSignal(GameManager.SignalName.GltfImageSaved, savePath);
+    }
+
+    private void SaveGltfFile(Node gltfScene, string savePath)
+    {
+        GltfDocument gltfDocument = new();
+        GltfState gltfState = new();
+        gltfDocument.AppendFromScene(gltfScene, gltfState);
+        Error error = gltfDocument.WriteToFilesystem(gltfState, savePath);
+
+        if (error != Error.Ok)
+        {
+            OS.Alert("Error al guardar el modelo", "ERROR");
+        }
+    }
+
+	
+    private void HandleGltfFile(string path, bool save)
+    {
+        Node gltfScene = FileManager.GenGltfScene(path);
+
+        if (gltfScene == null)
+        {
+            return;
+        }
+
+        ReplacecurrentModel(gltfScene as Node3D);
+
+		if(save)
 		{
-			string fileWithoutExtension = fileName.Remove(fileName.Length - extension.Length);
-			FileManager.CreateFolder(ModelSelection.ModelsFolderPath, fileWithoutExtension);
-			filePath = $"{ModelSelection.ModelsFolderPath}{fileWithoutExtension}/{fileName}";
-		} */
+			string fileName = Path.GetFileName(path);
+			var files = FileManager.GetDirectoryFiles(ModelSelection.ModelsFolderPath);
+			string extension = fileName.GetExtension();
+			fileName = FileManager.GetUniqueFileName(files, fileName, extension);
+			
+			string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);
+			
+			if(extension.Equals("gltf"))
+				gltfSavePath = Path.ChangeExtension(gltfSavePath, "glb");
 
-		GD.Print("FILE path: ", filePath);
-		
-		return filePath;
-	}
+			string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
+			gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
 
+			//GD.Print("Gltf save path: ", gltfSavePath);
+			//GD.Print("Gltf image save path: ", gltfImageSavePath);
 
-	private void SaveGltfFile(Node gltfScene, string path)
-	{
-		GltfDocument gltfDocument = new();
-		GltfState gltfState = new();
-		gltfDocument.AppendFromScene(gltfScene, gltfState);
-		Error error = gltfDocument.WriteToFilesystem(gltfState, path);
-
-		if(error != Error.Ok)
-		{
-			OS.Alert("Error al guardar el modelo", "ERROR");
+			SaveGltfFile(gltfScene, gltfSavePath);
+			SaveGltfImage(path, gltfImageSavePath);
 		}
-	}
+    }
 
-	private Node GenGltfScene(string path)
-	{
-		GltfDocument gltfDocument = new();
-		GltfState gltfState = new();
-		var error = gltfDocument.AppendFromFile(path, gltfState);
-		if(error == Error.Ok)
-		{
-			var gltfScene = gltfDocument.GenerateScene(gltfState);
-			return gltfScene;
-		}
-		else
-		{
-			OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
-		}
-
-		return null;
-	}
-
-	private void HandleGltfFile(string path)
-	{
-		Node gltfScene = GenGltfScene(path);
-
-		if(gltfScene == null)
-		{
-			return;
-		}
-
-		ReplacecurrentModel(gltfScene as Node3D);
-		SaveGltfFile(gltfScene, GetGltfSavePath(path.GetFile()));
-	}
-
-	private void AddCollisionsGltf(Node gltfScene)
+/* 	private void AddCollisionsGltf(Node gltfScene)
 	{
 		GD.Print("LLamado");
 		foreach(Node node in gltfScene.GetChildren())
@@ -359,7 +353,7 @@ public partial class World : Node3D
 			}
 		}
 
-	}
+	} */
 
 	private void HandleOtherFile(string path)
 	{
@@ -375,21 +369,6 @@ public partial class World : Node3D
 
 		AddChild(newModel);
 		currentModel = newModel;
-	}
-
-	private void OnModelSelected(string path, bool save)
-	{
-		Node gltfScene = GenGltfScene(path);
-
-		if(gltfScene == null)
-			return;
-
-		ReplacecurrentModel(gltfScene as Node3D);
-
-		if(save)
-		{
-			SaveGltfFile(gltfScene, GetGltfSavePath(path.GetFile()));
-		}
 	}
 
 	public static void SetModelPosition(Vector3 position)

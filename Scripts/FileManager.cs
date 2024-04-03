@@ -1,11 +1,34 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 public partial class FileManager : Node
 {
+
+    public static HashSet<string> GetDirectoryFiles(string directoryPath)
+    {
+        return DirAccess.Open(directoryPath)?.GetFiles()?.ToHashSet();
+    }
+
+    public static Node GenGltfScene(string path)
+    {
+        GltfDocument gltfDocument = new();
+        GltfState gltfState = new();
+        var error = gltfDocument.AppendFromFile(path, gltfState);
+        
+        if (error == Error.Ok)
+        {
+            return gltfDocument.GenerateScene(gltfState);
+        }
+        else
+        {
+            OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
+            return null;
+        }
+    }
 
     public static void CreateFolder(string path, string folderName)
     {

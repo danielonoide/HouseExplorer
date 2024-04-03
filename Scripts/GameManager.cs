@@ -12,6 +12,8 @@ public partial class GameManager : Node
     [Signal]
     public delegate void ModelSelectedEventHandler(string path, bool save);
 
+    [Signal]
+    public delegate void GltfImageSavedEventHandler(string imagePath);
 
 	public static bool IsMobile = true;
 
