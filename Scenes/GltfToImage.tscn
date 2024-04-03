@@ -15,12 +15,12 @@ texture = SubResource("ViewportTexture_8novq")
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
 
-[node name="Node3D" type="Node3D" parent="SubViewport"]
+[node name="Axis" type="Node3D" parent="SubViewport"]
 
-[node name="Camera3D" type="Camera3D" parent="SubViewport/Node3D"]
+[node name="Camera3D" type="Camera3D" parent="SubViewport/Axis"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19611, 8.2343)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport/Node3D/Camera3D"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport/Axis/Camera3D"]
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"

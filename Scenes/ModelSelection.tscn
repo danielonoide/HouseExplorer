@@ -1,0 +1,118 @@
+[gd_scene load_steps=5 format=3 uid="uid://vomfx8o2c4g8"]
+
+[ext_resource type="Script" path="res://Scripts/ModelSelection.cs" id="1_pfaya"]
+[ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_dhr58"]
+[ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_2hilc"]
+[ext_resource type="Theme" uid="uid://h0f7aoiiwvr3" path="res://Assets/Themes/FileDialog.tres" id="4_w0iot"]
+
+[node name="ModelSelection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pfaya")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_right = -59.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CloseButton" type="TextureButton" parent="CanvasLayer"]
+offset_left = 90.0
+offset_top = 20.0
+offset_right = 171.0
+offset_bottom = 83.0
+texture_normal = ExtResource("2_dhr58")
+texture_pressed = ExtResource("3_2hilc")
+texture_hover = ExtResource("3_2hilc")
+
+[node name="FileDialog" type="FileDialog" parent="CanvasLayer"]
+title = "Selecciona una textura"
+initial_position = 2
+size = Vector2i(1585, 825)
+theme = ExtResource("4_w0iot")
+ok_button_text = "Open"
+cancel_button_text = "Cancelar"
+mode_overrides_title = false
+file_mode = 0
+access = 2
+
+[node name="LabelContainer" type="CenterContainer" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -961.0
+offset_right = 961.0
+offset_bottom = 110.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/LabelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Selección de modelo"
+
+[node name="Selector" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Selector"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 164.69
+offset_right = 350.0
+offset_bottom = 207.69
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="AddModelButton" type="Button" parent="CanvasLayer/Selector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Agregar nuevo modelo"
+
+[node name="RemoveModelButton" type="Button" parent="CanvasLayer/Selector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Eliminar modelo seleccionado"
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer/Selector"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -844.0
+offset_top = -841.0
+offset_right = 831.0
+grow_horizontal = 2
+grow_vertical = 0
+max_columns = 5
+fixed_column_width = 200
+icon_mode = 0
+fixed_icon_size = Vector2i(200, 200)
+
+[connection signal="pressed" from="CanvasLayer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="file_selected" from="CanvasLayer/FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="CanvasLayer/Selector/HBoxContainer/AddModelButton" to="." method="_on_add_model_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Selector/HBoxContainer/RemoveModelButton" to="." method="_on_remove_model_button_pressed"]
+[connection signal="item_selected" from="CanvasLayer/Selector/ItemList" to="." method="_on_item_list_item_selected"]

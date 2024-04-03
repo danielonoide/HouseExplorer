@@ -17,7 +17,6 @@ public partial class ModelSelection : Control
     private Dictionary<int, string> _modelFileNames = new();
 
     private int? _selectedItem = null;
-
     private GameManager _gameManager;
 
 	private string[] _supportedFiles = {"gltf", "glb"};
@@ -26,8 +25,8 @@ public partial class ModelSelection : Control
     {
 		_gameManager = GetNode<GameManager>("/root/GameManager");
 
-        _itemList = GetNode<ItemList>("Selector/ItemList");
-        _fileDialog = GetNode<FileDialog>("FileDialog");
+        _itemList = GetNode<ItemList>("CanvasLayer/Selector/ItemList");
+        _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
 
         _itemList.AddItem("Default Model", defaultModelImage);
 
@@ -44,11 +43,12 @@ public partial class ModelSelection : Control
         }
 
         string[] fileNames = dirAccess.GetFiles();
-        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(); 
+        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0)); 
         AddChild(gltfToImage);       
 
         foreach(var fileName in fileNames)
         {
+            //GD.Print("Cargar: ", fileName);
             string extension = fileName.GetExtension();
             if(!extension.Equals("gltf") && !extension.Equals("glb"))
             {
@@ -57,14 +57,28 @@ public partial class ModelSelection : Control
 
             string filePath =$"{ModelsFolderPath}{fileName}";
 
-            Image image = await gltfToImage.ConvertGltfToImage(filePath);
+            await LoadModelImage(filePath, fileName, gltfToImage);
+
+/*             Image image = await gltfToImage.ConvertGltfToImage(filePath);
             var texture2D = ImageTexture.CreateFromImage(image);
 
             int index = _itemList.AddItem(fileName, texture2D);
-            _modelFileNames[index] = fileName;
+            _modelFileNames[index] = fileName; */
         }
 
         gltfToImage.QueueFree();
+    }
+
+    private async Task LoadModelImage(string path, string fileName, GltfToImage gltfToImage) //gltfToImage has to be a child
+    {
+        //GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0)); 
+        //AddChild(gltfToImage); 
+          
+        Image image = await gltfToImage.ConvertGltfToImage(path);
+        var texture2D = ImageTexture.CreateFromImage(image);
+
+        int index = _itemList.AddItem(fileName, texture2D);
+        _modelFileNames[index] = fileName;
     }
 
     private void _on_file_dialog_file_selected(string path)
@@ -76,9 +90,19 @@ public partial class ModelSelection : Control
         }
 
         _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, true);
-        GetParent().GetParent().QueueFree();        
-        Input.MouseMode = Input.MouseModeEnum.Captured;
-        GetTree().Paused = false;
+/*         Input.MouseMode = Input.MouseModeEnum.Captured;
+        GetTree().Paused = false; */
+        
+        QueueFree();
+
+/*         GD.Print("modelo a imagen: ", path);
+        GD.Print("modelo a imagen file: ", path.GetFile()); */
+
+
+/*         GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0)); 
+        AddChild(gltfToImage);
+        LoadModelImage(path, path.GetFile(), gltfToImage);
+        gltfToImage.QueueFree(); */
     }
 
     private void _on_add_model_button_pressed()
@@ -102,26 +126,8 @@ public partial class ModelSelection : Control
 
         string fileName =  _modelFileNames[_selectedItem.Value];
 
-        GD.Print("file to remove: ", fileName);
-        string extension = fileName.GetExtension();
-
-        Error error;
-
-/*         if(extension.Equals("gltf"))
-        {
-            string fileNoExtension = fileName.Remove(fileName.Length - extension.Length);
-            string dirPath = $"{ModelsFolderPath}{fileNoExtension}";
-
-            dirPath = ProjectSettings.GlobalizePath(dirPath);
-            GD.Print("DIr path: ", dirPath);
-            
-            error = OS.MoveToTrash(dirPath);
-        <}
-        else
-        { */
-            DirAccess dir = DirAccess.Open(ModelsFolderPath);
-            error = dir.Remove(fileName);
-        //}
+        DirAccess dir = DirAccess.Open(ModelsFolderPath);
+        Error error = dir.Remove(fileName);
 
         if(error == Error.Ok)
         {
@@ -153,5 +159,16 @@ public partial class ModelSelection : Control
             path = $"{ModelsFolderPath}{_modelFileNames[index]}";
 
         _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
+    }
+
+    private void _on_close_button_pressed()
+    {
+        QueueFree();
+    }
+
+    public static ModelSelection GetModelSelection()
+    {
+        var scene = GD.Load<PackedScene>("res://Scenes/ModelSelection.tscn");
+        return scene.Instantiate<ModelSelection>();
     }
 }
