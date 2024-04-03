@@ -16,7 +16,7 @@ public partial class PauseMenu : Control
 	private const float VAdjustment = 5000f;
 
 	GameManager gameManager;
-	Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl;
+	Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl, modelSelectionControl;
 	TextureButton backButton;
 	ColorRect colorRect;
 
@@ -24,9 +24,12 @@ public partial class PauseMenu : Control
 	{
 		gameManager = GetNode<GameManager>("/root/GameManager");
 		mainMenuControl = GetNode<Control>("CanvasLayer/MainMenu");
+		modelSelectionControl = GetNode<Control>("CanvasLayer/ModelSelection");
 		characterOptionsControl = GetNode<Control>("CanvasLayer/CharacterOptions");
 		modelOptionsControl = GetNode<Control>("CanvasLayer/ModelOptions");
 		sceneryOptionsControl = GetNode<Control>("CanvasLayer/SceneryMenu");
+
+		
 		backButton = GetNode<TextureButton>("CanvasLayer/BackButton");
 		jumpSlider = GetNode<HSlider>("%JumpSlider");
 		jumpSliderLabel = jumpSlider.GetChild<Label>(0);
@@ -47,6 +50,7 @@ public partial class PauseMenu : Control
             //hSlider.Connect("value_changed", new Callable(this, nameof(OnSensitivitySliderValueChanged)).Bind(new Godot.Collections.Array { hSlider }));
 
 			HSlider hSlider = sensitivitySliders[i] = (HSlider)sliderNodes[i];
+			GD.Print("Slider name: ", hSlider.Name);
 			int sliderIndex = i; //"closure" de no hacer esto se almacenaría la referencia i y no funcionaría 
 			//por ello se crea una variable sliderIndex, que se crea en cada iteración
 			//si la señal no tiene parámetro solo se pone () en vez de value en este caso
@@ -107,16 +111,20 @@ public partial class PauseMenu : Control
 
 		//var executablePath = OS.GetExecutablePath();
 		//OS.Execute(executablePath, Array.Empty<string>());
-		
+
 		OS.CreateInstance(Array.Empty<string>());
 		GetTree().Quit();
 	}
 
-	private void _on_file_button_pressed()
+	private void _on_model_selection_button_pressed()
 	{
-		GetTree().Paused = false;
+/* 		GetTree().Paused = false;
 		QueueFree();
-		gameManager.EmitSignal(GameManager.SignalName.FileButtonPressed);
+		gameManager.EmitSignal(GameManager.SignalName.FileButtonPressed); */
+
+		backButton.Visible = true;
+		mainMenuControl.Visible = false;
+		modelSelectionControl.Visible = true;
 	}
 
 	private void _on_quit_button_pressed()
@@ -175,6 +183,7 @@ public partial class PauseMenu : Control
 		characterOptionsControl.Visible = false;
 		sceneryOptionsControl.Visible = false;
 		colorRect.Visible =  true;
+		modelSelectionControl.Visible = false;
 	}
 
 	private void _on_speed_slider_value_changed(float value)

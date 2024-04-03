@@ -7,6 +7,18 @@ using System.Text.RegularExpressions;
 public partial class FileManager : Node
 {
 
+    public static void CreateFolder(string path, string folderName)
+    {
+        DirAccess dirAccess = DirAccess.Open(path);
+
+        if(dirAccess.DirExists(folderName))
+        {
+            return;
+        }
+
+        dirAccess.MakeDir(folderName);
+    }
+
     public static string GetUniqueFileName(HashSet<string> files, string fileName, string extension)  //fileName must include the extension
     {
         if(files.Contains(fileName)) //si ya existe el nombre de archivo

@@ -1,14 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://cv2xvtf7mdjth"]
 
-[ext_resource type="Script" path="res://Scripts/GltfToTexture.cs" id="1_ilcbh"]
+[ext_resource type="Script" path="res://Scripts/GltfToImage.cs" id="1_iih6l"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_8novq"]
 viewport_path = NodePath("SubViewport")
 
-[node name="GltfToTexture" type="Node3D"]
-script = ExtResource("1_ilcbh")
+[node name="GltfToImage" type="Node3D"]
+script = ExtResource("1_iih6l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-248, -249)
 texture = SubResource("ViewportTexture_8novq")
 
 [node name="SubViewport" type="SubViewport" parent="."]
@@ -23,9 +24,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19611, 8.2343)
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a File"
-size = Vector2i(927, 829)
-visible = true
+initial_position = 1
+size = Vector2i(925, 739)
 ok_button_text = "Open"
+dialog_close_on_escape = false
+mode_overrides_title = false
 file_mode = 0
 access = 2
 

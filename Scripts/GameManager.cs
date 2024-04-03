@@ -9,6 +9,9 @@ public partial class GameManager : Node
     [Signal]
     public delegate void FileButtonPressedEventHandler();
 
+    [Signal]
+    public delegate void ModelSelectedEventHandler(string path, bool save);
+
 
 	public static bool IsMobile = true;
 

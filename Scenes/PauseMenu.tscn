@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwdfpow5x006k"]
+[gd_scene load_steps=9 format=3 uid="uid://cwdfpow5x006k"]
 
 [ext_resource type="Script" path="res://Scripts/PauseMenu.cs" id="1_wit1w"]
 [ext_resource type="Texture2D" uid="uid://dfagmit7yydrk" path="res://Assets/Images/white_back_button.png" id="2_x0ua1"]
 [ext_resource type="Texture2D" uid="uid://dchy2h80g8bb6" path="res://Assets/Images/white_back_button_pressed.png" id="3_7ngek"]
 [ext_resource type="Script" path="res://Scripts/ModelOptions.cs" id="4_2xl6y"]
+[ext_resource type="Script" path="res://Scripts/ModelSelection.cs" id="4_413j6"]
 [ext_resource type="Script" path="res://Scripts/SceneryMenu.cs" id="5_tn63c"]
 [ext_resource type="Theme" uid="uid://h0f7aoiiwvr3" path="res://Assets/Themes/FileDialog.tres" id="6_ki8dn"]
 [ext_resource type="Theme" uid="uid://bua3cwomagsq8" path="res://Assets/Themes/OutlinedLabel.tres" id="6_nbfei"]
@@ -90,7 +91,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Reiniciar"
 
-[node name="FileButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
+[node name="ModelSelectionButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Seleccionar modelo"
@@ -114,6 +115,93 @@ text = "Escenario"
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Salir"
+
+[node name="ModelSelection" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_413j6")
+
+[node name="FileDialog" type="FileDialog" parent="CanvasLayer/ModelSelection"]
+title = "Selecciona una textura"
+initial_position = 2
+size = Vector2i(1585, 825)
+theme = ExtResource("6_ki8dn")
+ok_button_text = "Open"
+cancel_button_text = "Cancelar"
+mode_overrides_title = false
+file_mode = 0
+access = 2
+
+[node name="LabelContainer" type="CenterContainer" parent="CanvasLayer/ModelSelection"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -961.0
+offset_right = 961.0
+offset_bottom = 110.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ModelSelection/LabelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "Selección de modelo"
+
+[node name="Selector" type="Control" parent="CanvasLayer/ModelSelection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/ModelSelection/Selector"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 164.69
+offset_right = 350.0
+offset_bottom = 207.69
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="AddModelButton" type="Button" parent="CanvasLayer/ModelSelection/Selector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Agregar nuevo modelo"
+
+[node name="RemoveModelButton" type="Button" parent="CanvasLayer/ModelSelection/Selector/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Eliminar modelo seleccionado"
+
+[node name="ItemList" type="ItemList" parent="CanvasLayer/ModelSelection/Selector"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -844.0
+offset_top = -841.0
+offset_right = 831.0
+grow_horizontal = 2
+grow_vertical = 0
+max_columns = 5
+fixed_column_width = 200
+icon_mode = 0
+fixed_icon_size = Vector2i(200, 200)
 
 [node name="CharacterOptions" type="Control" parent="CanvasLayer"]
 visible = false
@@ -880,11 +968,15 @@ can_add_swatches = false
 [connection signal="pressed" from="CanvasLayer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/FileButton" to="." method="_on_file_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ModelSelectionButton" to="." method="_on_model_selection_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/ModelButton" to="." method="_on_model_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/CharacterButton" to="." method="_on_character_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/SceneryButton" to="." method="_on_scenery_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="file_selected" from="CanvasLayer/ModelSelection/FileDialog" to="CanvasLayer/ModelSelection" method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="CanvasLayer/ModelSelection/Selector/HBoxContainer/AddModelButton" to="CanvasLayer/ModelSelection" method="_on_add_model_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ModelSelection/Selector/HBoxContainer/RemoveModelButton" to="CanvasLayer/ModelSelection" method="_on_remove_model_button_pressed"]
+[connection signal="item_selected" from="CanvasLayer/ModelSelection/Selector/ItemList" to="CanvasLayer/ModelSelection" method="_on_item_list_item_selected"]
 [connection signal="toggled" from="CanvasLayer/CharacterOptions/VBoxContainer/FlySetting/FlyToggleButton" to="." method="_on_fly_button_toggled"]
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/SpeedSetting/SpeedSlider" to="." method="_on_speed_slider_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/CharacterOptions/VBoxContainer/JumpSetting/JumpSlider" to="." method="_on_jump_slider_value_changed"]

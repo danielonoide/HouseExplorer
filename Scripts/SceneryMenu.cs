@@ -123,18 +123,6 @@ public partial class SceneryMenu : Control
        
     }
 
-    private void CreateFolder(string path, string folderName)
-    {
-        DirAccess dirAccess = DirAccess.Open(path);
-
-        if(dirAccess.DirExists(folderName))
-        {
-            return;
-        }
-
-        dirAccess.MakeDir(folderName);
-    }
-
     private void LoadTextures(string path)
     {
         DirAccess dirAccess = DirAccess.Open(path);
@@ -224,7 +212,7 @@ public partial class SceneryMenu : Control
     private void _on_add_texture_button_pressed()
     {
         string folderName = _currentTab == Tab.Land ? FloorTexturesFolderName : BackgroundTexturesFolderName;
-        CreateFolder("user://", folderName);
+        FileManager.CreateFolder("user://", folderName);
         _fileDialog.Visible = true;
     }
 
