@@ -282,7 +282,9 @@ public partial class SceneryMenu : Control
         _itemList.Select(index);
         _selectedItem = index;
 
-        if(_currentTab == Tab.Land)
+        bool landTab = _currentTab == Tab.Land;
+
+        if(landTab)
         {       
             World.FloorTexture = imageTexture;
         }
@@ -291,58 +293,17 @@ public partial class SceneryMenu : Control
             World.BackgroundTexture = imageTexture;
         }
         
-        string fileName = $"textura{_itemList.ItemCount}.{extension}";
-        SaveImage(image, extension, index, fileName);
-
-    }
-
-    private void SaveImage(Image image, string extension, int index, string fileName)
-    {
-        //if(_textureFileNames.Contains(new KeyValuePair<int, string>(index, fileName))) //si ya existe el nombre de archivo
-        if(_textureFileNames.ContainsValue(fileName)) //si ya existe el nombre de archivo
-        {
-            string pattern = @"\((\d+)\)";
-            Match match = Regex.Match(fileName, pattern);
-
-            if(match.Success) //si ya hay un número dentro de paréntesis (1)
-            {
-                int num = match.Value[1] - '0';
-                num++;
-                string newString = $"({num})";
-                fileName = fileName.Replace(match.Value, newString);
-            }
-            else
-            {
-                StringBuilder sb = new();
-                sb.Append(fileName.Remove(fileName.Length-extension.Length-1));
-                sb.Append("(1)");
-                sb.Append('.');
-                sb.Append(extension);
-
-                fileName = sb.ToString();
-            }
-
-            SaveImage(image, extension, index, fileName);
-            return;
-        }
+        StringBuilder sb = new();
+        sb.Append(landTab ? "Floor" : "Background");
+        sb.Append($"Texture{_itemList.ItemCount}.{extension}");
+        string fileName = sb.ToString();
+        
+        fileName = FileManager.GetUniqueFileName(new HashSet<string>(_textureFileNames.Values), fileName, extension);
+        string filePath = landTab ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}";
 
         _textureFileNames[index] = fileName;
-        string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}";
+        FileManager.SaveImage(image, filePath, extension);
 
-        switch(extension)
-        {
-            case "png":
-                image.SavePng(filePath);
-                break;
-            
-            case "jpg":
-                image.SaveJpg(filePath);
-                break;
-
-            case "webp":
-                image.SaveWebp(filePath);
-                break;
-        }
     }
 
     //background

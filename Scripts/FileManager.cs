@@ -1,12 +1,15 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 public partial class FileManager : Node
 {
-/*     public static void SaveImage(Image image, string extension, int index, string fileName)
+
+    public static string GetUniqueFileName(HashSet<string> files, string fileName, string extension)  //fileName must include the extension
     {
-        //if(_textureFileNames.Contains(new KeyValuePair<int, string>(index, fileName))) //si ya existe el nombre de archivo
-        if(_textureFileNames.ContainsValue(fileName)) //si ya existe el nombre de archivo
+        if(files.Contains(fileName)) //si ya existe el nombre de archivo
         {
             string pattern = @"\((\d+)\)";
             Match match = Regex.Match(fileName, pattern);
@@ -29,13 +32,14 @@ public partial class FileManager : Node
                 fileName = sb.ToString();
             }
 
-            SaveImage(image, extension, index, fileName);
-            return;
+            return GetUniqueFileName(files, fileName, extension);
         }
 
-        _textureFileNames[index] = fileName;
-        string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}";
+        return fileName;
+    }
 
+    public static void SaveImage(Image image, string filePath, string extension)
+    {
         switch(extension)
         {
             case "png":
@@ -50,5 +54,5 @@ public partial class FileManager : Node
                 image.SaveWebp(filePath);
                 break;
         }
-    } */
+    }
 }
