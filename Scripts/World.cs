@@ -316,48 +316,10 @@ public partial class World : Node3D
 		Node3D node3D = packedScene.Instantiate<Node3D>();
 
 		ReplacecurrentModel(node3D);
-
-/* 		PackedScene packedScene = GD.Load<PackedScene>(path);
-		Node3D node3D = packedScene.Instantiate<Node3D>();
-
-		foreach(Node node in node3D.GetChildren())
-		{
-			if(node is MeshInstance3D meshInstance3D)
-			{
-				meshInstance3D.CreateTrimeshCollision();
-				currentModel?.QueueFree();
-				AddChild(meshInstance3D);
-				currentModel = meshInstance3D;
-				return;
-			}
-		}
-
-		OS.Alert("No se pueden agregar colisiones a este tipo de archivo");
-		ReplacecurrentModel(node3D); */
 	}
-
-	private void CreateCollision3D(MeshInstance3D baseModel)
-	{
-		Aabb aabb = baseModel.Mesh.GetAabb();
-
-		
-        BoxShape3D boxShape = new()
-        {
-            Size = aabb.Size
-        };
-
-		CollisionShape3D collisionShape = new()
-		{
-			Shape = boxShape
-		};
-
-		//area3D.AddChild(collisionShape);	
-
-    }
 
 	private void ReplacecurrentModel(Node3D newModel)
 	{
-		//Node3D existingModel = GetNodeOrNull<Node3D>(currentModelName);
 		currentModel?.QueueFree();
 
 		AddChild(newModel);

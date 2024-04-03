@@ -149,8 +149,6 @@ public partial class SceneryMenu : Control
         foreach(var fileName in fileNames)
         {
             string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}" ;
-            //GD.Print("Current Tab: ", _currentTab, " file Path: ", filePath);
-            //filePath = ProjectSettings.GlobalizePath(filePath);
             
             var image = Image.LoadFromFile(filePath);
             Texture2D texture2D = ImageTexture.CreateFromImage(image);
@@ -207,7 +205,7 @@ public partial class SceneryMenu : Control
         World.TriplanarFloorMaterial = toggled_on;
     }
 
-    private void _on_land_item_list_item_selected(int index)
+    private void _on_item_list_item_selected(int index)
     {
         _selectedItem = index;
 
@@ -222,15 +220,6 @@ public partial class SceneryMenu : Control
             World.BackgroundTexture = texture2D;
         }
     }
-
-/*     private void PrintDictionary()
-    {
-        GD.Print("Diccionario: ");
-        foreach(var KeyValuePair in _textureFileNames)
-        {
-            GD.Print("LLave: ", KeyValuePair.Key, " Valor: ", KeyValuePair.Value);
-        }
-    } */
 
     private void _on_add_texture_button_pressed()
     {
@@ -340,9 +329,6 @@ public partial class SceneryMenu : Control
         _textureFileNames[index] = fileName;
         string filePath = _currentTab == Tab.Land ? $"{FloorTexturesPath}{fileName}" : $"{BackgroundTexturesPath}{fileName}";
 
-/*         extension = extension.Capitalize();
-        image.Call($"Save{extension}", filePath); */
-
         switch(extension)
         {
             case "png":
@@ -401,7 +387,6 @@ public partial class SceneryMenu : Control
 
     private void _on_time_slider_value_changed(float militaryTime)
     {
-        //float militaryTime = (value/360) * 24;
         float time = militaryTime > 12 ? militaryTime % 12 : militaryTime;
 
         string abbrev = militaryTime >= 12 ? "pm" : "am";
@@ -415,20 +400,7 @@ public partial class SceneryMenu : Control
 
         float degrees = (militaryTime/24) * 360;
         degrees -= AngleOffset;
-        ChangeTime(degrees);
-    }
-
-    private void ChangeTime(float degrees)
-    {
-        float currRotation = World.LightRotationX;
-        float diff = degrees - currRotation;
-
-        //no es necesario cambiar la posición, solo el ángulo
-        //Vector2 newLightPos = World.LightPosition.Rotated(Mathf.DegToRad(diff));
-
-        //World.LightPosition = newLightPos;
         World.LightRotationX = degrees;
-
     }
 
     private void _on_shadow_button_toggled(bool toggled_on)
