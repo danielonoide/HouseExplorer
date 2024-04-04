@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 public partial class World : Node3D
 {
-	bool pauseMenuActive = false;
+	private bool pauseMenuActive = false;
+	//private bool modelSelectorActive = false;
+
 	CanvasLayer ui;
 	FileDialog fileDialog;
 	GameManager gameManager;
@@ -379,12 +381,22 @@ public partial class World : Node3D
 
 	private void _on_accept_dialog_confirmed()
 	{
+		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
+
+		if(modelFiles != null)
+		{
+			GetTree().Paused = true;
+			pauseMenuActive = true;
+			AddChild(ModelSelection.GetModelSelection());
+			return;
+		}
+
 		fileDialog.Visible = true;
 	}
 
 	private void _on_accept_dialog_canceled()
 	{
-		fileDialog.Visible = true;
+		_on_accept_dialog_confirmed();
 	}
 
 }

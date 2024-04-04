@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-public partial class ModelSelection : Control
+public partial class ModelSelection : PauseMenu
 {
     private ItemList _itemList;
     private FileDialog _fileDialog;

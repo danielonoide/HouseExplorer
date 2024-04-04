@@ -5,20 +5,18 @@ using System.Linq;
 
 public partial class PauseMenu : Control
 {
-	HSlider[] sensitivitySliders = new HSlider[2];
 
-	HSlider speedSlider, jumpSlider;
-	Label speedSliderLabel, jumpSliderLabel;
-	CheckButton flyButton;
-	Label[] labels = new Label[2];
-
+	private HSlider[] sensitivitySliders = new HSlider[2];
+	private HSlider speedSlider, jumpSlider;
+	private Label speedSliderLabel, jumpSliderLabel;
+	private CheckButton flyButton;
+	private Label[] labels = new Label[2];
 	private const float HAdjustment = 10000f;
-	private const float VAdjustment = 5000f;
-
-	GameManager gameManager;
-	Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl;
-	TextureButton backButton;
-	ColorRect colorRect;
+	 private const float VAdjustment = 5000f;
+	private GameManager gameManager;
+	private Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl;
+	private TextureButton backButton;
+	private ColorRect colorRect;
 
 	public override void _Ready()
 	{
@@ -133,7 +131,7 @@ public partial class PauseMenu : Control
 		GetTree().Quit();
 	}
 
-	private void Close()
+	protected void Close()
 	{
 		Input.MouseMode=Input.MouseModeEnum.Captured;
 		GetTree().Paused = false;
