@@ -132,7 +132,7 @@ public partial class World : Node3D
 		currentModel = GetNode<Node3D>("CurrentModel");
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed += PauseMenuClosed;
-		gameManager.ModelSelected += HandleGltfFile;
+		gameManager.ModelSelected += (path, saveModel) => {GD.Print("MOdel selected received"); CallDeferred(MethodName.HandleGltfFile, path, saveModel);};
 
 		saveModelDialog = GetNode<ConfirmationDialog>("SaveModelConfirmDialog");
 		saveModelDialog.Canceled += () => 
@@ -300,7 +300,7 @@ public partial class World : Node3D
         }
     }
 
-    private async void HandleGltfFile(string path, bool save)
+    private void HandleGltfFile(string path, bool save)
     {
 		GltfDocument gltfDocument = new();
         GltfState gltfState = new();
@@ -319,10 +319,10 @@ public partial class World : Node3D
 /* 		GD.Print("Se debe de cerrar la pantalla de carga");
 		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); */
 
-/* 		if(!save)
+		if(!save)
 			return;
 
-		saveModelDialog.Visible = true;
+/* 		saveModelDialog.Visible = true;
 		await ToSignal(saveModelDialog, "confirmed");
 		saveModelDialog.Visible = false; */
 		//AddChild(LoadingScreen.GetLoadingScreen());

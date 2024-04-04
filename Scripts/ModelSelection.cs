@@ -27,8 +27,16 @@ public partial class ModelSelection : PauseMenu
     public override void _Ready()
     {
 		gameManager = GetNode<GameManager>("/root/GameManager");
-        //gameManager.GltfImageSaved += (path) => {CallDeferred("OnGltfImageSaved", path);};
-        gameManager.GltfImageSaved += OnGltfImageSaved;
+/*         gameManager.GltfImageSaved += (path) => 
+        {
+            GD.Print("Señal GltfImageSaved recibida");
+            if(!IsInstanceValid(this))
+                return;
+            CallDeferred(MethodName.OnGltfImageSaved, path);
+        }; */
+
+        //gameManager.GltfImageSaved += OnGltfImageSaved; //se ejecuta aún cuando haya sido eliminado el nodo, con connect no pasa esto
+        gameManager.Connect(GameManager.SignalName.GltfImageSaved, Callable.From<string>((imagePath) => OnGltfImageSaved(imagePath)));
 
         _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
         _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
@@ -86,7 +94,6 @@ public partial class ModelSelection : PauseMenu
 
     private void OnGltfImageSaved(string imagePath)
     {
-        GD.Print("ON gltf image saved");
         int index = LoadModelImage(imagePath);
         _itemList.Select(index);
         _selectedItem = index;
@@ -176,6 +183,7 @@ public partial class ModelSelection : PauseMenu
     {
 /*         GD.Print("Debe agregar pantalla de carga");
         AddChild(LoadingScreen.GetLoadingScreen()); */
+        GD.Print("Aqui manda la señal");
         gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, saveModel);
     }
 
