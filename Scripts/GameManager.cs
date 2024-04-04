@@ -15,6 +15,9 @@ public partial class GameManager : Node
     [Signal]
     public delegate void GltfImageSavedEventHandler(string imagePath);
 
+    [Signal]
+    public delegate void CloseLoadingScreenEventHandler();
+
 	public static bool IsMobile = true;
 
     public override void _Ready()

@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://dy34evwr4f1bj" path="res://Assets/Images/settings_button.png" id="6_hixd0"]
 [ext_resource type="Texture2D" uid="uid://dd310ftxuqaqf" path="res://Assets/Images/settings_button_pressed.png" id="7_856qo"]
 [ext_resource type="Texture2D" uid="uid://ddgf3l1053yet" path="res://Assets/Images/jump_button.png" id="8_eygvo"]
-[ext_resource type="Theme" uid="uid://h0f7aoiiwvr3" path="res://Assets/Themes/FileDialog.tres" id="9_2hu2e"]
 [ext_resource type="Texture2D" uid="uid://bvg8uaivts4rd" path="res://Assets/Images/jump_button_pressed.png" id="9_5arj5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nal3l"]
@@ -50,6 +49,11 @@ corner_radius_bottom_left = 20
 AcceptDialog/styles/panel = SubResource("StyleBoxFlat_bfok2")
 Button/font_sizes/font_size = 50
 Label/font_sizes/font_size = 40
+Window/font_sizes/title_font_size = 30
+
+[sub_resource type="Theme" id="Theme_4md2g"]
+Button/font_sizes/font_size = 30
+Label/font_sizes/font_size = 30
 Window/font_sizes/title_font_size = 30
 
 [node name="World" type="Node3D"]
@@ -117,18 +121,6 @@ texture_pressed = ExtResource("9_5arj5")
 action = "jump"
 visibility_mode = 1
 
-[node name="FileDialog" type="FileDialog" parent="UI/Control/Control"]
-unique_name_in_owner = true
-title = "Selecciona un modelo"
-initial_position = 1
-size = Vector2i(1585, 825)
-theme = ExtResource("9_2hu2e")
-ok_button_text = "Open"
-cancel_button_text = "Cancelar"
-mode_overrides_title = false
-file_mode = 0
-access = 2
-
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 title = "¡Bienvenido!"
 initial_position = 1
@@ -150,8 +142,17 @@ En dicho menú podrás configurar diferentes opciones del modelo, del terreno y 
 "
 dialog_autowrap = true
 
+[node name="SaveModelConfirmDialog" type="ConfirmationDialog" parent="."]
+process_mode = 3
+title = "Guardar Modelo"
+initial_position = 1
+size = Vector2i(724, 178)
+theme = SubResource("Theme_4md2g")
+ok_button_text = "Si"
+dialog_text = "¿Deseas guardar el modelo cargado?"
+dialog_autowrap = true
+cancel_button_text = "No"
+
 [connection signal="pressed" from="UI/Control/Control/SettingsButton" to="." method="_on_touch_screen_button_pressed"]
-[connection signal="canceled" from="UI/Control/Control/FileDialog" to="." method="_on_file_dialog_canceled"]
-[connection signal="file_selected" from="UI/Control/Control/FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="canceled" from="AcceptDialog" to="." method="_on_accept_dialog_canceled"]
 [connection signal="confirmed" from="AcceptDialog" to="." method="_on_accept_dialog_confirmed"]

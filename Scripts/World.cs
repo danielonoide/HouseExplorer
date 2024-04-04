@@ -11,8 +11,9 @@ public partial class World : Node3D
 	//private bool modelSelectorActive = false;
 
 	CanvasLayer ui;
-	FileDialog fileDialog;
 	GameManager gameManager;
+
+	private ConfirmationDialog saveModelDialog;
 
 	//string currentModelName = "currentModel";
 	private static Node3D currentModel;
@@ -131,11 +132,17 @@ public partial class World : Node3D
 		currentModel = GetNode<Node3D>("CurrentModel");
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed += PauseMenuClosed;
-		gameManager.FileButtonPressed += FileButtonPressed;
 		gameManager.ModelSelected += HandleGltfFile;
 
-		fileDialog = GetNode<FileDialog>("%FileDialog");
-		fileDialog.Invalidate();
+		saveModelDialog = GetNode<ConfirmationDialog>("SaveModelConfirmDialog");
+		saveModelDialog.Canceled += () => 
+		{
+			saveModelDialog.Visible = false; 
+			Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = true}); 
+			Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = false});
+		};
+
+
 
 		floorMesh = GetNode<MeshInstance3D>("Floor").Mesh as PlaneMesh;
 		floorCollision = GetNode<CollisionShape3D>("Floor/StaticBody3D/CollisionShape3D").Shape as BoxShape3D;
@@ -154,7 +161,6 @@ public partial class World : Node3D
 		else
 		{
 			OS.RequestPermissions();
-			fileDialog.RootSubfolder = OS.GetSystemDir(OS.SystemDir.Downloads, true);
 		}
 
         FileManager.CreateFolder("user://", ModelSelection.ModelsFolderName);
@@ -197,19 +203,13 @@ public partial class World : Node3D
 			ui.Visible = true;
 	}
 
-	private void FileButtonPressed()
-	{
-		PauseMenuClosed();
-		fileDialog.Visible = true;
-	}
-
-	private void _on_file_dialog_canceled()
+/* 	private void _on_file_dialog_canceled()
 	{
         Input.MouseMode = Input.MouseModeEnum.Captured;
 		//fileDialog.Visible = false;
-	}
+	} */
 
-	private void _on_file_dialog_file_selected(string path)
+/* 	private void _on_file_dialog_file_selected(string path)
 	{
 		string extension = path.GetExtension().ToLower();
 
@@ -241,7 +241,7 @@ public partial class World : Node3D
 		{
 			Input.MouseMode = Input.MouseModeEnum.Captured;
 		}
-	}
+	} */
 
 	private void HandleObjFile(string path)  //No funciona correctamente
 	{
@@ -286,6 +286,8 @@ public partial class World : Node3D
 		gltfScene.Position = Vector3.Zero;
 
 		gameManager.EmitSignal(GameManager.SignalName.GltfImageSaved, savePath);
+/* 		GD.Print("Se debe de cerrar la pantalla de carga");
+		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); */
     }
 
 	private void SaveGltfFile(GltfDocument gltfDocument, GltfState gltfState, string savePath)
@@ -298,7 +300,7 @@ public partial class World : Node3D
         }
     }
 
-    private void HandleGltfFile(string path, bool save)
+    private async void HandleGltfFile(string path, bool save)
     {
 		GltfDocument gltfDocument = new();
         GltfState gltfState = new();
@@ -314,26 +316,36 @@ public partial class World : Node3D
 
         gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
         ReplacecurrentModel(gltfScene);
+/* 		GD.Print("Se debe de cerrar la pantalla de carga");
+		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); */
 
-		if(save)
-		{
-			string fileName = Path.GetFileName(path);
-			var files = FileManager.GetDirectoryFiles(ModelSelection.ModelsFolderPath);
-			string extension = fileName.GetExtension();
-			fileName = FileManager.GetUniqueFileName(files, fileName, extension);
-			
-			string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);
-			
-			if(extension.Equals("gltf"))
-				gltfSavePath = Path.ChangeExtension(gltfSavePath, "glb");
+/* 		if(!save)
+			return;
 
-			string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
-			gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
+		saveModelDialog.Visible = true;
+		await ToSignal(saveModelDialog, "confirmed");
+		saveModelDialog.Visible = false; */
+		//AddChild(LoadingScreen.GetLoadingScreen());
+		string fileName = Path.GetFileName(path);
+		var files = FileManager.GetDirectoryFiles(ModelSelection.ModelsFolderPath);
+		string extension = fileName.GetExtension();
+		fileName = FileManager.GetUniqueFileName(files, fileName, extension);
+		
+		string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);
+		
+		if(extension.Equals("gltf"))
+			gltfSavePath = Path.ChangeExtension(gltfSavePath, "glb");
 
-			SaveGltfFile(gltfDocument, gltfState, gltfSavePath);
-			SaveGltfImage(gltfScene, gltfImageSavePath);
-		}
+		string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
+		gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
+
+		GD.Print("gltfSavePath: ", gltfSavePath);
+		GD.Print("gltfImagePath: ", gltfImageSavePath);
+
+		SaveGltfFile(gltfDocument, gltfState, gltfSavePath);
+		SaveGltfImage(gltfScene, gltfImageSavePath);
     }
+
 	private void HandleOtherFile(string path)
 	{
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>(path);
@@ -383,15 +395,11 @@ public partial class World : Node3D
 	{
 		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
 
-		if(modelFiles == null || !modelFiles.Any())
-		{
-			fileDialog.Visible = true;
-			return;
-		}
+		bool fileDialogVisible = modelFiles == null || !modelFiles.Any();
 
 		GetTree().Paused = true;
 		pauseMenuActive = true;
-		AddChild(ModelSelection.GetModelSelection());
+		AddChild(ModelSelection.GetModelSelection(fileDialogVisible));
 
 		if(GameManager.IsMobile)
 			ui.Visible = false;

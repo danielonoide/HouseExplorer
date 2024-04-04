@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 public partial class ModelSelection : PauseMenu
 {
+    private bool _fileDialogInitialVisibility = false;
     private ItemList _itemList;
     private FileDialog _fileDialog;
     public const string ModelsFolderName = "SavedModels";
@@ -26,6 +27,7 @@ public partial class ModelSelection : PauseMenu
     public override void _Ready()
     {
 		gameManager = GetNode<GameManager>("/root/GameManager");
+        //gameManager.GltfImageSaved += (path) => {CallDeferred("OnGltfImageSaved", path);};
         gameManager.GltfImageSaved += OnGltfImageSaved;
 
         _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
@@ -40,6 +42,8 @@ public partial class ModelSelection : PauseMenu
             _itemList.Select(_selectedItem.Value);
             _loadModelButton.Visible = true;
         }
+
+        _fileDialog.Visible = _fileDialogInitialVisibility;
     }
     
     private void LoadModelImages()
@@ -82,6 +86,7 @@ public partial class ModelSelection : PauseMenu
 
     private void OnGltfImageSaved(string imagePath)
     {
+        GD.Print("ON gltf image saved");
         int index = LoadModelImage(imagePath);
         _itemList.Select(index);
         _selectedItem = index;
@@ -101,7 +106,7 @@ public partial class ModelSelection : PauseMenu
             return;
         }
 
-        gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, true);
+        ModelSelected(path, true);
     }
 
     private void _on_add_model_button_pressed()
@@ -164,7 +169,14 @@ public partial class ModelSelection : PauseMenu
     private void _on_load_model_button_pressed()
     {
         string path = _selectedItem.Value == 0 ? DefaultModelPath : $"{ModelsFolderPath}{_modelFileNames[_selectedItem.Value]}"; 
-        gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
+        ModelSelected(path, false);
+    }
+    
+    private void ModelSelected(string path, bool saveModel)
+    {
+/*         GD.Print("Debe agregar pantalla de carga");
+        AddChild(LoadingScreen.GetLoadingScreen()); */
+        gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, saveModel);
     }
 
     private void _on_close_button_pressed()
@@ -186,4 +198,15 @@ public partial class ModelSelection : PauseMenu
         var scene = GD.Load<PackedScene>("res://Scenes/ModelSelection.tscn");
         return scene.Instantiate<ModelSelection>();
     }
+
+    public static ModelSelection GetModelSelection(bool fileDialogInitialVisibility)
+    {
+        var scene = GD.Load<PackedScene>("res://Scenes/ModelSelection.tscn");
+
+        ModelSelection result = scene.Instantiate<ModelSelection>();
+        result._fileDialogInitialVisibility = fileDialogInitialVisibility;
+
+        return result;
+    }
+
 }
