@@ -23,13 +23,16 @@ public partial class ModelSelection : Control
 
 	private string[] _supportedFiles = {"gltf", "glb"};
 
+    private Button _loadModelButton;
+
     public override void _Ready()
     {
 		_gameManager = GetNode<GameManager>("/root/GameManager");
         _gameManager.GltfImageSaved += OnGltfImageSaved;
 
-        _itemList = GetNode<ItemList>("CanvasLayer/Selector/ItemList");
+        _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
         _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
+        _loadModelButton = GetNode<Button>("CanvasLayer/Selector/HBoxContainer/LoadModelButton");
 
         _itemList.AddItem("Default Model", defaultModelImage);
         LoadModelImages();
@@ -37,6 +40,7 @@ public partial class ModelSelection : Control
         if(_selectedItem != null)
         {
             _itemList.Select(_selectedItem.Value);
+            _loadModelButton.Visible = true;
         }
     }
     
@@ -66,6 +70,12 @@ public partial class ModelSelection : Control
         Texture2D texture2D = ImageTexture.CreateFromImage(image);     
         string fileName = imagePath.GetFile().Replace(".png", ""); 
 
+        if(!IsInstanceValid(_itemList))
+        {
+            GD.Print("Item list eliminao");
+            _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
+        }
+
         int index = _itemList.AddItem(fileName, texture2D);
         _modelFileNames[index] = $"{fileName}.glb";
 
@@ -77,6 +87,12 @@ public partial class ModelSelection : Control
         int index = LoadModelImage(imagePath);
         _itemList.Select(index);
         _selectedItem = index;
+    }
+
+    private void DeselectItem()
+    {
+        _selectedItem = null;
+        _loadModelButton.Visible = false;
     }
 
     private void _on_file_dialog_file_selected(string path)
@@ -125,7 +141,7 @@ public partial class ModelSelection : Control
             }
 
             _modelFileNames.Remove(_itemList.ItemCount);
-            _selectedItem = null;
+            DeselectItem();
         }
         else
         {
@@ -139,15 +155,17 @@ public partial class ModelSelection : Control
         {
             OS.Alert($"Error al intentar eliminar la imagen del modelo: {error}", "Alerta!");
         }
-
     }
 
-
-    private void _on_item_list_item_selected(int index)
+    private void _on_model_item_list_item_selected(int index)
     {
         _selectedItem = index;
+        _loadModelButton.Visible = true;
+    }
 
-        string path = index == 0 ? DefaultModelPath : $"{ModelsFolderPath}{_modelFileNames[index]}"; 
+    private void _on_load_model_button_pressed()
+    {
+        string path = _selectedItem.Value == 0 ? DefaultModelPath : $"{ModelsFolderPath}{_modelFileNames[_selectedItem.Value]}"; 
         _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
     }
 

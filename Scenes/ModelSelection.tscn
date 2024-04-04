@@ -84,6 +84,12 @@ grow_horizontal = 2
 mouse_filter = 2
 theme_override_constants/separation = 50
 
+[node name="LoadModelButton" type="Button" parent="CanvasLayer/Selector/HBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Cargar modelo seleccionado"
+
 [node name="AddModelButton" type="Button" parent="CanvasLayer/Selector/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
@@ -94,7 +100,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Eliminar modelo seleccionado"
 
-[node name="ItemList" type="ItemList" parent="CanvasLayer/Selector"]
+[node name="ModelItemList" type="ItemList" parent="CanvasLayer/Selector"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -113,6 +119,7 @@ fixed_icon_size = Vector2i(200, 200)
 
 [connection signal="pressed" from="CanvasLayer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="file_selected" from="CanvasLayer/FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="CanvasLayer/Selector/HBoxContainer/LoadModelButton" to="." method="_on_load_model_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Selector/HBoxContainer/AddModelButton" to="." method="_on_add_model_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Selector/HBoxContainer/RemoveModelButton" to="." method="_on_remove_model_button_pressed"]
-[connection signal="item_selected" from="CanvasLayer/Selector/ItemList" to="." method="_on_item_list_item_selected"]
+[connection signal="item_selected" from="CanvasLayer/Selector/ModelItemList" to="." method="_on_model_item_list_item_selected"]
