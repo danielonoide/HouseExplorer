@@ -13,7 +13,7 @@ public partial class PauseMenu : Control
 	private Label[] labels = new Label[2];
 	private const float HAdjustment = 10000f;
 	 private const float VAdjustment = 5000f;
-	private GameManager gameManager;
+	protected GameManager gameManager;
 	private Control mainMenuControl, characterOptionsControl, modelOptionsControl, sceneryOptionsControl;
 	private TextureButton backButton;
 	private ColorRect colorRect;

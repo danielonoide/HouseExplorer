@@ -19,16 +19,14 @@ public partial class ModelSelection : PauseMenu
     private Dictionary<int, string> _modelFileNames = new();
 
     private static int? _selectedItem = null;
-    private GameManager _gameManager;
-
 	private string[] _supportedFiles = {"gltf", "glb"};
 
     private Button _loadModelButton;
 
     public override void _Ready()
     {
-		_gameManager = GetNode<GameManager>("/root/GameManager");
-        _gameManager.GltfImageSaved += OnGltfImageSaved;
+		gameManager = GetNode<GameManager>("/root/GameManager");
+        gameManager.GltfImageSaved += OnGltfImageSaved;
 
         _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
         _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
@@ -103,7 +101,7 @@ public partial class ModelSelection : PauseMenu
             return;
         }
 
-        _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, true);
+        gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, true);
     }
 
     private void _on_add_model_button_pressed()
@@ -166,12 +164,21 @@ public partial class ModelSelection : PauseMenu
     private void _on_load_model_button_pressed()
     {
         string path = _selectedItem.Value == 0 ? DefaultModelPath : $"{ModelsFolderPath}{_modelFileNames[_selectedItem.Value]}"; 
-        _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
+        gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
     }
 
     private void _on_close_button_pressed()
     {
-        QueueFree();
+        if(GetParent() is PauseMenu)
+        {
+           QueueFree();
+           return; 
+        }
+        
+        Close();
+		gameManager.EmitSignal(GameManager.SignalName.PauseMenuClosed);
+
+        //QueueFree();
     }
 
     public static ModelSelection GetModelSelection()

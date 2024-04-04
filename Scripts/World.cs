@@ -383,15 +383,18 @@ public partial class World : Node3D
 	{
 		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
 
-		if(modelFiles != null)
+		if(modelFiles == null || !modelFiles.Any())
 		{
-			GetTree().Paused = true;
-			pauseMenuActive = true;
-			AddChild(ModelSelection.GetModelSelection());
+			fileDialog.Visible = true;
 			return;
 		}
 
-		fileDialog.Visible = true;
+		GetTree().Paused = true;
+		pauseMenuActive = true;
+		AddChild(ModelSelection.GetModelSelection());
+
+		if(GameManager.IsMobile)
+			ui.Visible = false;
 	}
 
 	private void _on_accept_dialog_canceled()
