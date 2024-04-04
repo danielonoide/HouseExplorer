@@ -18,7 +18,7 @@ public partial class ModelSelection : Control
 
     private Dictionary<int, string> _modelFileNames = new();
 
-    private int? _selectedItem = null;
+    private static int? _selectedItem = null;
     private GameManager _gameManager;
 
 	private string[] _supportedFiles = {"gltf", "glb"};
@@ -26,78 +26,41 @@ public partial class ModelSelection : Control
     public override void _Ready()
     {
 		_gameManager = GetNode<GameManager>("/root/GameManager");
-        _gameManager.GltfImageSaved += LoadModelImage;
+        _gameManager.GltfImageSaved += OnGltfImageSaved;
 
         _itemList = GetNode<ItemList>("CanvasLayer/Selector/ItemList");
         _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
 
         _itemList.AddItem("Default Model", defaultModelImage);
-
         LoadModelImages();
+
+        if(_selectedItem != null)
+        {
+            _itemList.Select(_selectedItem.Value);
+        }
     }
-
-/*     private async Task LoadModelImages()
-    {
-        DirAccess dirAccess = DirAccess.Open(ModelsFolderPath);
-
-        if(dirAccess == null)
-        {
-            return;
-        }
-
-        string[] fileNames = dirAccess.GetFiles();
-        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0)); 
-        AddChild(gltfToImage);       
-
-        foreach(var fileName in fileNames)
-        {
-            //GD.Print("Cargar: ", fileName);
-            string extension = fileName.GetExtension();
-            if(!extension.Equals("gltf") && !extension.Equals("glb"))
-            {
-                continue;
-            }
-
-            string filePath =$"{ModelsFolderPath}{fileName}";
-
-            await LoadModelImage(filePath, fileName, gltfToImage);
-        }
-
-        gltfToImage.QueueFree();
-    } */
-
-
-    /*     private async Task LoadModelImage(string path, string fileName, GltfToImage gltfToImage) //gltfToImage has to be a child
-    {
-        //GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0)); 
-        //AddChild(gltfToImage); 
-          
-        Image image = await gltfToImage.ConvertGltfToImage(path);
-        var texture2D = ImageTexture.CreateFromImage(image);
-
-        int index = _itemList.AddItem(fileName, texture2D);
-        _modelFileNames[index] = fileName;
-    } */
-
+    
     private void LoadModelImages()
     {
         DirAccess dirAccess = DirAccess.Open(ModelImagesFolderPath);
 
         if(dirAccess == null)
         {
+            OS.Alert("Error al cargar las imagenes", "La carpeta no existe");
             return;
         }
 
         string[] fileNames = dirAccess.GetFiles();
-        
+
         foreach(var fileName in fileNames)
         {
-            string filePath =$"{ModelImagesFolderPath}{fileName}";
+            //string filePath = $"{ModelImagesFolderPath}{fileName}";
+            string filePath = Path.Combine(ModelImagesFolderPath, fileName);
             LoadModelImage(filePath);
         }
     }
 
-    private void LoadModelImage(string imagePath)
+    private int LoadModelImage(string imagePath)
     {
         var image = Image.LoadFromFile(imagePath);
         Texture2D texture2D = ImageTexture.CreateFromImage(image);     
@@ -105,6 +68,13 @@ public partial class ModelSelection : Control
 
         int index = _itemList.AddItem(fileName, texture2D);
         _modelFileNames[index] = $"{fileName}.glb";
+
+        return index;
+    }
+
+    private void OnGltfImageSaved(string imagePath)
+    {
+        int index = LoadModelImage(imagePath);
         _itemList.Select(index);
         _selectedItem = index;
     }
@@ -177,13 +147,7 @@ public partial class ModelSelection : Control
     {
         _selectedItem = index;
 
-        string path; 
-
-        if(index == 0)
-            path = DefaultModelPath;
-        else
-            path = $"{ModelsFolderPath}{_modelFileNames[index]}";
-
+        string path = index == 0 ? DefaultModelPath : $"{ModelsFolderPath}{_modelFileNames[index]}"; 
         _gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, false);
     }
 

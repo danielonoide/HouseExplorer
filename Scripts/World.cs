@@ -243,15 +243,6 @@ public partial class World : Node3D
 
 	private void HandleObjFile(string path)  //No funciona correctamente
 	{
-/* 		MeshInstance3D modelInstance = new()
-		{
-			Mesh = ResourceLoader.Load<Mesh>(path)
-		};
-
-		modelInstance.CreateTrimeshCollision();
-
-		ReplacecurrentModel(modelInstance); */
-
 		GDScript gdScript = GD.Load<GDScript>("res://Scripts/ObjFileLoader.gd");
 		GodotObject objLoader = (GodotObject) gdScript.New();
 		try
@@ -279,22 +270,24 @@ public partial class World : Node3D
 		}
 	}
 
-
-    private async Task SaveGltfImage(string gltfPath, string savePath)
+	private async Task SaveGltfImage(Node3D gltfScene, string savePath)
     {
-        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(new Vector3(0, 1000, 0));
+		Vector3 viewportPos = new (0, 1000, 0);
+        GltfToImage gltfToImage = GltfToImage.GetGltfToImage(viewportPos);
         AddChild(gltfToImage);
-        await gltfToImage.SaveGltfImage(gltfPath, savePath);
+
+        gltfScene.Position = viewportPos;
+		await gltfToImage.WaitForViewportUpdate();
+		Image image = gltfToImage.GetViewportImage();
+		image.SavePng(savePath);
         gltfToImage.QueueFree();
+		gltfScene.Position = Vector3.Zero;
 
 		gameManager.EmitSignal(GameManager.SignalName.GltfImageSaved, savePath);
     }
 
-    private void SaveGltfFile(Node gltfScene, string savePath)
+	private void SaveGltfFile(GltfDocument gltfDocument, GltfState gltfState, string savePath)
     {
-        GltfDocument gltfDocument = new();
-        GltfState gltfState = new();
-        gltfDocument.AppendFromScene(gltfScene, gltfState);
         Error error = gltfDocument.WriteToFilesystem(gltfState, savePath);
 
         if (error != Error.Ok)
@@ -303,17 +296,22 @@ public partial class World : Node3D
         }
     }
 
-	
     private void HandleGltfFile(string path, bool save)
     {
-        Node gltfScene = FileManager.GenGltfScene(path);
+		GltfDocument gltfDocument = new();
+        GltfState gltfState = new();
+        var error = gltfDocument.AppendFromFile(path, gltfState);
 
-        if (gltfScene == null)
+		Node3D gltfScene = null;
+
+        if (error != Error.Ok)
         {
-            return;
+			OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
+			return;
         }
 
-        ReplacecurrentModel(gltfScene as Node3D);
+        gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
+        ReplacecurrentModel(gltfScene);
 
 		if(save)
 		{
@@ -330,31 +328,10 @@ public partial class World : Node3D
 			string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
 			gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
 
-			//GD.Print("Gltf save path: ", gltfSavePath);
-			//GD.Print("Gltf image save path: ", gltfImageSavePath);
-
-			SaveGltfFile(gltfScene, gltfSavePath);
-			SaveGltfImage(path, gltfImageSavePath);
+			SaveGltfFile(gltfDocument, gltfState, gltfSavePath);
+			SaveGltfImage(gltfScene, gltfImageSavePath);
 		}
     }
-
-/* 	private void AddCollisionsGltf(Node gltfScene)
-	{
-		GD.Print("LLamado");
-		foreach(Node node in gltfScene.GetChildren())
-		{
-			if(node is MeshInstance3D meshInstance3D)
-			{
-				meshInstance3D.CreateConvexCollision(true, true);
-			}
-			else
-			{
-				AddCollisionsGltf(gltfScene);
-			}
-		}
-
-	} */
-
 	private void HandleOtherFile(string path)
 	{
 		PackedScene packedScene = ResourceLoader.Load<PackedScene>(path);

@@ -58,12 +58,28 @@ public partial class GltfToImage : Node3D
         return image;
     }
 
-    private async Task WaitForViewportUpdate()
+    public async Task SaveGltfImage(Node3D gltfScene, string savePath)
+    {
+        Image image = await ConvertGltfToImage(gltfScene);
+        image.SavePng(savePath);
+    }
+
+    public async Task<Image> ConvertGltfToImage(Node3D gltfScene)
+    {
+        _axis.AddChild(gltfScene);
+        await WaitForViewportUpdate();
+        Image image = GetViewportImage();
+        //gltfScene.QueueFree();
+        return image;
+    }
+
+
+    public async Task WaitForViewportUpdate()
     {
         await ToSignal(GetTree().CreateTimer(Delay), "timeout");
     }
 
-    private Image GetViewportImage()
+    public Image GetViewportImage()
     {
         return _subViewport.GetViewport().GetTexture().GetImage();
     }
