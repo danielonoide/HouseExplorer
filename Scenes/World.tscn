@@ -156,3 +156,4 @@ cancel_button_text = "No"
 [connection signal="pressed" from="UI/Control/Control/SettingsButton" to="." method="_on_touch_screen_button_pressed"]
 [connection signal="canceled" from="AcceptDialog" to="." method="_on_accept_dialog_canceled"]
 [connection signal="confirmed" from="AcceptDialog" to="." method="_on_accept_dialog_confirmed"]
+[connection signal="confirmed" from="SaveModelConfirmDialog" to="." method="_on_save_model_confirm_dialog_confirmed"]

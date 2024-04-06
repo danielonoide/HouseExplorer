@@ -124,6 +124,10 @@ public partial class World : Node3D
 
 	public static bool LightShadow {get => light3D.ShadowEnabled; set=> light3D.ShadowEnabled = value;}
 
+
+	GltfDocument gltfDocument = new();
+	string modelPath = string.Empty;
+
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -132,7 +136,7 @@ public partial class World : Node3D
 		currentModel = GetNode<Node3D>("CurrentModel");
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed += PauseMenuClosed;
-		gameManager.ModelSelected += (path, saveModel) => {GD.Print("MOdel selected received"); CallDeferred(MethodName.HandleGltfFile, path, saveModel);};
+		gameManager.ModelSelected += (path, saveModel) => HandleGltfFile(path, saveModel);
 
 		saveModelDialog = GetNode<ConfirmationDialog>("SaveModelConfirmDialog");
 		saveModelDialog.Canceled += () => 
@@ -165,6 +169,14 @@ public partial class World : Node3D
 
         FileManager.CreateFolder("user://", ModelSelection.ModelsFolderName);
         FileManager.CreateFolder("user://", ModelSelection.ModelImagesFolderName);
+
+/* 		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
+		bool fileDialogVisible = modelFiles == null || !modelFiles.Any();
+		GetTree().Paused = true;
+		pauseMenuActive = true;
+		var pauseMenu = PauseMenu.GetPauseMenu();
+		pauseMenu.AddChild(ModelSelection.GetModelSelection(fileDialogVisible));
+		AddChild(pauseMenu); */
 	}
 
 	private void ShowPauseMenu()
@@ -272,79 +284,117 @@ public partial class World : Node3D
 		}
 	}
 
-	private async Task SaveGltfImage(Node3D gltfScene, string savePath)
+	private async void SaveGltfImage(string savePath)
     {
 		Vector3 viewportPos = new (0, 1000, 0);
         GltfToImage gltfToImage = GltfToImage.GetGltfToImage(viewportPos);
         AddChild(gltfToImage);
 
-        gltfScene.Position = viewportPos;
+        currentModel.Position = viewportPos;
 		await gltfToImage.WaitForViewportUpdate();
 		Image image = gltfToImage.GetViewportImage();
 		image.SavePng(savePath);
         gltfToImage.QueueFree();
-		gltfScene.Position = Vector3.Zero;
+		currentModel.Position = Vector3.Zero;
 
 		gameManager.EmitSignal(GameManager.SignalName.GltfImageSaved, savePath);
-/* 		GD.Print("Se debe de cerrar la pantalla de carga");
-		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); */
+		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); 
     }
 
-	private void SaveGltfFile(GltfDocument gltfDocument, GltfState gltfState, string savePath)
+	private async void SaveGltfFile(string savePath)
     {
-        Error error = gltfDocument.WriteToFilesystem(gltfState, savePath);
+		GltfState gltfStateSave = new();
+		Error error = await Task.Run(() => gltfDocument.AppendFromScene(currentModel, gltfStateSave));
 
-        if (error != Error.Ok)
-        {
-            OS.Alert("Error al guardar el modelo", "ERROR");
-        }
+		if (error != Error.Ok)
+		{
+			OS.Alert("Error al convertir el modelo", $"ERROR: {error}");
+			return; // No emitir la señal de cierre de pantalla de carga si hay un error
+		}
+		//error = await Task.Run(() => gltfDocument.WriteToFilesystem(gltfStateSave, savePath));
+		
+		error = gltfDocument.WriteToFilesystem(gltfStateSave, savePath);
+
+		if (error != Error.Ok)
+		{
+			OS.Alert("Error al guardar el modelo", $"ERROR: {error}");
+			return; // No emitir la señal de cierre de pantalla de carga si hay un error
+		}
+		else
+		{
+			gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen);
+		}
     }
 
-    private void HandleGltfFile(string path, bool save)
-    {
-		GltfDocument gltfDocument = new();
-        GltfState gltfState = new();
-        var error = gltfDocument.AppendFromFile(path, gltfState);
+	private void SaveGlbFile(string savePath)
+	{
+		string pathWithoutFile = modelPath.Replace(modelPath.GetFile(), "");
 
-		Node3D gltfScene = null;
+		DirAccess dir = DirAccess.Open(pathWithoutFile);
+		Error error = dir.Copy(modelPath, savePath);
 
-        if (error != Error.Ok)
+		if (error != Error.Ok)
         {
-			OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
-			return;
-        }
+            OS.Alert("Error al guardar el modelo", $"ERROR: {error}");
+        } 
+	}
 
-        gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
+    private async void HandleGltfFile(string path, bool save)
+    {
+		GltfState gltfState = new();
+
+		await Task.Run(
+			() =>
+			{
+				var error = gltfDocument.AppendFromFile(path, gltfState);
+				
+				if (error != Error.Ok)
+				{
+					OS.Alert("No se puedo procesar el archivo GLTF", "ERROR");
+					return;
+				}
+			}
+		);
+
+        Node3D gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
         ReplacecurrentModel(gltfScene);
-/* 		GD.Print("Se debe de cerrar la pantalla de carga");
-		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); */
+		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); 
 
-		if(!save)
-			return;
 
-/* 		saveModelDialog.Visible = true;
-		await ToSignal(saveModelDialog, "confirmed");
-		saveModelDialog.Visible = false; */
-		//AddChild(LoadingScreen.GetLoadingScreen());
-		string fileName = Path.GetFileName(path);
+		if(save)
+		{
+			modelPath = path;
+			saveModelDialog.Visible = true;
+		}
+
+    }
+
+	private void _on_save_model_confirm_dialog_confirmed()
+	{
+		saveModelDialog.Visible = false;
+		AddChild(LoadingScreen.GetLoadingScreen());
+		string fileName = Path.GetFileName(modelPath);
+		string prevExtension = fileName.GetExtension();
+		fileName = Path.ChangeExtension(fileName, "glb");
 		var files = FileManager.GetDirectoryFiles(ModelSelection.ModelsFolderPath);
 		string extension = fileName.GetExtension();
 		fileName = FileManager.GetUniqueFileName(files, fileName, extension);
 		
-		string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);
-		
-		if(extension.Equals("gltf"))
-			gltfSavePath = Path.ChangeExtension(gltfSavePath, "glb");
-
+		string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);		
 		string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
 		gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
 
-		GD.Print("gltfSavePath: ", gltfSavePath);
-		GD.Print("gltfImagePath: ", gltfImageSavePath);
 
-		SaveGltfFile(gltfDocument, gltfState, gltfSavePath);
-		SaveGltfImage(gltfScene, gltfImageSavePath);
-    }
+		SaveGltfImage(gltfImageSavePath);
+
+		if(prevExtension.Equals("gltf"))
+		{
+			SaveGltfFile(gltfSavePath);
+		}
+		else
+			SaveGlbFile(gltfSavePath);
+		
+	}
 
 	private void HandleOtherFile(string path)
 	{
@@ -397,12 +447,13 @@ public partial class World : Node3D
 
 		bool fileDialogVisible = modelFiles == null || !modelFiles.Any();
 
-		GetTree().Paused = true;
 		pauseMenuActive = true;
 		AddChild(ModelSelection.GetModelSelection(fileDialogVisible));
+		GetTree().Paused = true;
 
 		if(GameManager.IsMobile)
 			ui.Visible = false;
+
 	}
 
 	private void _on_accept_dialog_canceled()

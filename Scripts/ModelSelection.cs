@@ -80,12 +80,6 @@ public partial class ModelSelection : PauseMenu
         Texture2D texture2D = ImageTexture.CreateFromImage(image);     
         string fileName = imagePath.GetFile().Replace(".png", ""); 
 
-        if(!IsInstanceValid(_itemList))
-        {
-            GD.Print("Item list eliminao");
-            _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
-        }
-
         int index = _itemList.AddItem(fileName, texture2D);
         _modelFileNames[index] = $"{fileName}.glb";
 
@@ -113,6 +107,7 @@ public partial class ModelSelection : PauseMenu
             return;
         }
 
+        _fileDialog.Visible = false;
         ModelSelected(path, true);
     }
 
@@ -181,9 +176,7 @@ public partial class ModelSelection : PauseMenu
     
     private void ModelSelected(string path, bool saveModel)
     {
-/*         GD.Print("Debe agregar pantalla de carga");
-        AddChild(LoadingScreen.GetLoadingScreen()); */
-        GD.Print("Aqui manda la señal");
+        AddChild(LoadingScreen.GetLoadingScreen());
         gameManager.EmitSignal(GameManager.SignalName.ModelSelected, path, saveModel);
     }
 
