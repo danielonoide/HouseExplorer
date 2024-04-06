@@ -101,7 +101,7 @@ public partial class ModelSelection : PauseMenu
 
     private void _on_file_dialog_file_selected(string path)
     {
-        if(_supportedFiles.Contains(path))
+        if(!_supportedFiles.Contains(path.GetExtension()))
         {
             OS.Alert("Tipo de archivo incorrecto, intenta con gltf o glb", "ERROR");
             return;

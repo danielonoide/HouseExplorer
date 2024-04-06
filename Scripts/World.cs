@@ -17,8 +17,6 @@ public partial class World : Node3D
 
 	//string currentModelName = "currentModel";
 	private static Node3D currentModel;
-	string[] supportedFiles = {"gltf", "glb"};//, "fbx", "dae", "obj};
-
 	static PlaneMesh floorMesh;
 	static BoxShape3D floorCollision;
 	public static Vector2 FloorSize 
@@ -371,24 +369,21 @@ public partial class World : Node3D
 
 	private void _on_save_model_confirm_dialog_confirmed()
 	{
-		saveModelDialog.Visible = false;
 		AddChild(LoadingScreen.GetLoadingScreen());
-		string fileName = Path.GetFileName(modelPath);
-		string prevExtension = fileName.GetExtension();
-		fileName = Path.ChangeExtension(fileName, "glb");
-		var files = FileManager.GetDirectoryFiles(ModelSelection.ModelsFolderPath);
-		string extension = fileName.GetExtension();
-		fileName = FileManager.GetUniqueFileName(files, fileName, extension);
+		string fileName = Path.GetFileNameWithoutExtension(modelPath);
+		var files = FileManager.GetDirectoryFilesExtensionless(ModelSelection.ModelsFolderPath);
+		fileName = FileManager.GetUniqueFileNameExtensionless(files, fileName);
 		
-		string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);		
 		string gltfImageSavePath = Path.Combine(ModelSelection.ModelImagesFolderPath, fileName);
 		gltfImageSavePath = Path.ChangeExtension(gltfImageSavePath, "png");
-
-
 		SaveGltfImage(gltfImageSavePath);
 
-		if(prevExtension.Equals("gltf"))
+		string gltfSavePath = Path.Combine(ModelSelection.ModelsFolderPath, fileName);		
+		gltfSavePath = Path.ChangeExtension(gltfSavePath, "glb"); 
+
+		if(modelPath.GetExtension().Equals("gltf"))
 		{
+			GD.Print("Gltf save path: ", gltfSavePath);
 			SaveGltfFile(gltfSavePath);
 		}
 		else

@@ -580,10 +580,12 @@ offset_top = -584.0
 offset_right = 844.5
 grow_horizontal = 2
 grow_vertical = 0
-max_columns = 5
-fixed_column_width = 200
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+max_columns = 8
+fixed_column_width = 211
 icon_mode = 0
-fixed_icon_size = Vector2i(200, 200)
+fixed_icon_size = Vector2i(211, 211)
 
 [node name="LandMenu" type="Control" parent="CanvasLayer/SceneryMenu"]
 layout_mode = 1

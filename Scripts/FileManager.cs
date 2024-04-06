@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,6 +12,12 @@ public partial class FileManager : Node
     public static HashSet<string> GetDirectoryFiles(string directoryPath)
     {
         return DirAccess.Open(directoryPath)?.GetFiles()?.ToHashSet();
+    }
+
+    public static HashSet<string> GetDirectoryFilesExtensionless(string directoryPath)
+    {
+        //return DirAccess.Open(directoryPath)?.GetFiles()?.Select(s => s.Replace($".{s.GetExtension()}", "")).ToHashSet();
+        return DirAccess.Open(directoryPath)?.GetFiles()?.Select(s => Path.GetFileNameWithoutExtension(s)).ToHashSet();
     }
 
     public static Node GenGltfScene(string path)
@@ -72,6 +79,36 @@ public partial class FileManager : Node
 
         return fileName;
     }
+
+    public static string GetUniqueFileNameExtensionless(HashSet<string> files, string fileName)  //fileName must include the extension
+    {
+        if(files.Contains(fileName)) //si ya existe el nombre de archivo
+        {
+            string pattern = @"\((\d+)\)";
+            Match match = Regex.Match(fileName, pattern);
+
+            if(match.Success) //si ya hay un número dentro de paréntesis (1)
+            {
+                int num = match.Value[1] - '0';
+                num++;
+                string newString = $"({num})";
+                fileName = fileName.Replace(match.Value, newString);
+            }
+            else
+            {
+                StringBuilder sb = new();
+                sb.Append(fileName);
+                sb.Append("(1)");
+
+                fileName = sb.ToString();
+            }
+
+            return GetUniqueFileNameExtensionless(files, fileName);
+        }
+
+        return fileName;
+    }
+
 
     public static void SaveImage(Image image, string filePath, string extension)
     {
