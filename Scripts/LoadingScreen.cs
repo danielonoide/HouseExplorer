@@ -13,6 +13,8 @@ public partial class LoadingScreen : Control
 
     ThreadLoadStatus status;
 
+    private bool _closing = false; 
+
     public async override void _Ready()
     {
         _gameManager = GetNode<GameManager>("/root/GameManager");
@@ -27,6 +29,8 @@ public partial class LoadingScreen : Control
 
         _gameManager.Connect(GameManager.SignalName.CloseLoadingScreen, Callable.From(() => 
         {
+            _progressBar.Value = 100;
+            _closing = true;
             var timer = GetTree().CreateTimer(0.5f);
             timer.Timeout += OnCloseLoadingScreenTimerTimeout;
         }));
@@ -38,6 +42,8 @@ public partial class LoadingScreen : Control
             for (int i = 0; i < 99; i++)
             {
                 await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+                if(_closing)
+                    break;
                 _progressBar.Value = i + 1;
             }
             QueueFree();
@@ -46,7 +52,6 @@ public partial class LoadingScreen : Control
 
     private void OnCloseLoadingScreenTimerTimeout()
     {
-        _progressBar.Value = 100;
         QueueFree();
     }
 

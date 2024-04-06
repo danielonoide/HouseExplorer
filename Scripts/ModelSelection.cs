@@ -14,7 +14,7 @@ public partial class ModelSelection : PauseMenu
     public const string ModelImagesFolderName = "SavedModelImages";
     public const string ModelsFolderPath = $"user://{ModelsFolderName}/";
     public const string ModelImagesFolderPath = $"user://{ModelImagesFolderName}/";
-    public const string DefaultModelPath = "res://Assets/3DModels/House_001_GLB.glb";
+    public const string DefaultModelPath = "res://Assets/3DModels/house.glb";
     private Texture2D defaultModelImage = GD.Load<Texture2D>("res://Assets/Images/ModelImage.png");
 
     private Dictionary<int, string> _modelFileNames = new();

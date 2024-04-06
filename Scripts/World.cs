@@ -339,6 +339,16 @@ public partial class World : Node3D
 
     private async void HandleGltfFile(string path, bool save)
     {
+
+		if(path.Equals(ModelSelection.DefaultModelPath))
+		{
+			var scene = GD.Load<PackedScene>(path);
+			Node3D node = scene.Instantiate<Node3D>();
+			ReplacecurrentModel(node);
+			gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); 
+			return;
+		}
+
 		GltfState gltfState = new();
 
 		await Task.Run(
@@ -357,7 +367,6 @@ public partial class World : Node3D
         Node3D gltfScene = gltfDocument.GenerateScene(gltfState) as Node3D;
         ReplacecurrentModel(gltfScene);
 		gameManager.EmitSignal(GameManager.SignalName.CloseLoadingScreen); 
-
 
 		if(save)
 		{
@@ -383,7 +392,6 @@ public partial class World : Node3D
 
 		if(modelPath.GetExtension().Equals("gltf"))
 		{
-			GD.Print("Gltf save path: ", gltfSavePath);
 			SaveGltfFile(gltfSavePath);
 		}
 		else

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/World.cs" id="1_rr7d3"]
 [ext_resource type="PackedScene" uid="uid://djywja6ah7g7o" path="res://Scenes/Player.tscn" id="2_8sg6e"]
-[ext_resource type="PackedScene" uid="uid://bq060kojmk02i" path="res://Assets/3DModels/House_001_GLB.glb" id="3_h3lft"]
+[ext_resource type="PackedScene" uid="uid://bq060kojmk02i" path="res://Assets/3DModels/house.glb" id="3_h3lft"]
 [ext_resource type="Texture2D" uid="uid://bbomlof4ollgx" path="res://Assets/Images/floor_texture.png" id="3_kt30b"]
 [ext_resource type="Texture2D" uid="uid://dy34evwr4f1bj" path="res://Assets/Images/settings_button.png" id="6_hixd0"]
 [ext_resource type="Texture2D" uid="uid://dd310ftxuqaqf" path="res://Assets/Images/settings_button_pressed.png" id="7_856qo"]
