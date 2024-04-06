@@ -40,6 +40,11 @@ public partial class ModelSelection : PauseMenu
 
         _itemList = GetNode<ItemList>("CanvasLayer/Selector/ModelItemList");
         _fileDialog = GetNode<FileDialog>("CanvasLayer/FileDialog");
+        if(GameManager.IsMobile)
+        {
+            _fileDialog.RootSubfolder = OS.GetSystemDir(OS.SystemDir.Downloads, true);
+        }
+
         _loadModelButton = GetNode<Button>("CanvasLayer/Selector/HBoxContainer/LoadModelButton");
 
         _itemList.AddItem("Default Model", defaultModelImage);

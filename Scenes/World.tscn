@@ -113,7 +113,8 @@ texture_normal = ExtResource("6_hixd0")
 texture_pressed = ExtResource("7_856qo")
 visibility_mode = 1
 
-[node name="TouchScreenButton" type="TouchScreenButton" parent="UI/Control/Control"]
+[node name="JumpTouchButton" type="TouchScreenButton" parent="UI/Control/Control"]
+unique_name_in_owner = true
 position = Vector2(-155, 783)
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("8_eygvo")

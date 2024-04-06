@@ -26,15 +26,23 @@ public partial class Player : CharacterBody3D
 
 	Joystick joystick;
 
+	GameManager gameManager;
+
 	public override void _Ready()
 	{
 		camera3D=GetNode<Camera3D>("Camera3D");
 		joystick = GetNode<Joystick>("%Joystick");
 
+		gameManager = GetNode<GameManager>("/root/GameManager");
+
+
 		if(!GameManager.IsMobile)
 		{
 			joystick.QueueFree();
+			return;
 		}
+		
+		gameManager.HUDVisibility += (visible) => joystick.Visible = visible;
 	}
 
  	public override void _PhysicsProcess(double delta)

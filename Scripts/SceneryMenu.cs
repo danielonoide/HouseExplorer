@@ -84,6 +84,10 @@ public partial class SceneryMenu : Control
 
         _textureSelector = GetNode<Control>("TextureSelector");
         _fileDialog = GetNode<FileDialog>("FileDialog");
+        if(GameManager.IsMobile)
+        {
+            _fileDialog.RootSubfolder = OS.GetSystemDir(OS.SystemDir.Downloads, true);
+        }
 
         //LoadTextures(FloorTexturesPath);
 

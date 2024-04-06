@@ -23,6 +23,7 @@ shape = SubResource("CapsuleShape3D_h0cai")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.4)
 
 [node name="UI" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="Control" type="Control" parent="UI"]
 layout_mode = 3

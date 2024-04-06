@@ -10,10 +10,16 @@ public partial class World : Node3D
 	private bool pauseMenuActive = false;
 	//private bool modelSelectorActive = false;
 
-	CanvasLayer ui;
-	GameManager gameManager;
+	private CanvasLayer ui;
+	private GameManager gameManager;
 
 	private ConfirmationDialog saveModelDialog;
+
+	private GltfDocument gltfDocument = new();
+	private string modelPath = string.Empty;
+
+	private TouchScreenButton jumpButton;
+
 
 	//string currentModelName = "currentModel";
 	private static Node3D currentModel;
@@ -123,18 +129,18 @@ public partial class World : Node3D
 	public static bool LightShadow {get => light3D.ShadowEnabled; set=> light3D.ShadowEnabled = value;}
 
 
-	GltfDocument gltfDocument = new();
-	string modelPath = string.Empty;
-
 	public override void _Ready()
 	{
         //Input.MouseMode = Input.MouseModeEnum.Captured;
 
 		ui = GetNode<CanvasLayer>("UI");
 		currentModel = GetNode<Node3D>("CurrentModel");
+		jumpButton = GetNode<TouchScreenButton>("%JumpTouchButton");
+
         gameManager = GetNode<GameManager>("/root/GameManager");
 		gameManager.PauseMenuClosed += PauseMenuClosed;
 		gameManager.ModelSelected += (path, saveModel) => HandleGltfFile(path, saveModel);
+		gameManager.FlyToggleButtonToggled += (toggleOn) => jumpButton.Visible = !toggleOn;
 
 		saveModelDialog = GetNode<ConfirmationDialog>("SaveModelConfirmDialog");
 		saveModelDialog.Canceled += () => 
@@ -158,6 +164,7 @@ public partial class World : Node3D
 		if(!GameManager.IsMobile)
 		{
 			ui.Visible = false;
+			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
 			//fileDialog.RootSubfolder = OS.GetUserDataDir();
 		}
 		else
@@ -181,6 +188,7 @@ public partial class World : Node3D
 	{
 		if(GameManager.IsMobile)
 			ui.Visible = false;
+			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
 
 		AddChild(PauseMenu.GetPauseMenu());		
 		pauseMenuActive = true;
@@ -210,7 +218,10 @@ public partial class World : Node3D
 	{
 		pauseMenuActive = false;
 		if(GameManager.IsMobile)
+		{
 			ui.Visible = true;
+			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, true);
+		}
 	}
 
 /* 	private void _on_file_dialog_canceled()
@@ -446,6 +457,12 @@ public partial class World : Node3D
 
 	private void _on_accept_dialog_confirmed()
 	{
+		if(GameManager.IsMobile)
+		{
+			ui.Visible = false;
+			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
+		}
+
 		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
 
 		bool fileDialogVisible = modelFiles == null || !modelFiles.Any();
@@ -454,8 +471,6 @@ public partial class World : Node3D
 		AddChild(ModelSelection.GetModelSelection(fileDialogVisible));
 		GetTree().Paused = true;
 
-		if(GameManager.IsMobile)
-			ui.Visible = false;
 
 	}
 

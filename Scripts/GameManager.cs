@@ -18,6 +18,12 @@ public partial class GameManager : Node
     [Signal]
     public delegate void CloseLoadingScreenEventHandler();
 
+    [Signal]
+    public delegate void FlyToggleButtonToggledEventHandler(bool toggledOn);
+
+    [Signal]
+    public delegate void HUDVisibilityEventHandler(bool visible);
+
 	public static bool IsMobile = true;
 
     public override void _Ready()

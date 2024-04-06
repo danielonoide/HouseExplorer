@@ -109,6 +109,13 @@ public partial class PauseMenu : Control
 		//var executablePath = OS.GetExecutablePath();
 		//OS.Execute(executablePath, Array.Empty<string>());
 
+		if(GameManager.IsMobile)
+		{
+			GetTree().Paused = false;
+			GetTree().ReloadCurrentScene();
+			return;
+		}
+
 		OS.CreateInstance(Array.Empty<string>());
 		GetTree().Quit();
 	}
@@ -199,6 +206,7 @@ public partial class PauseMenu : Control
 	private void _on_fly_button_toggled(bool toggled_on)
 	{
 		Player.Fly = toggled_on;
+		gameManager.EmitSignal(GameManager.SignalName.FlyToggleButtonToggled, toggled_on);
 	}
 	
 }
