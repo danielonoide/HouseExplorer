@@ -138,18 +138,30 @@ public partial class World : Node3D
 		jumpButton = GetNode<TouchScreenButton>("%JumpTouchButton");
 
         gameManager = GetNode<GameManager>("/root/GameManager");
-		gameManager.PauseMenuClosed += PauseMenuClosed;
-		gameManager.ModelSelected += (path, saveModel) => HandleGltfFile(path, saveModel);
-		gameManager.FlyToggleButtonToggled += (toggleOn) => jumpButton.Visible = !toggleOn;
+		// gameManager.PauseMenuClosed += PauseMenuClosed;
+		// gameManager.ModelSelected += (path, saveModel) => HandleGltfFile(path, saveModel);
+		// gameManager.FlyToggleButtonToggled += (toggleOn) => jumpButton.Visible = !toggleOn;
+		gameManager.Connect(GameManager.SignalName.PauseMenuClosed, Callable.From(PauseMenuClosed));
+		gameManager.Connect(GameManager.SignalName.ModelSelected, Callable.From<string, bool>((path, saveModel) => HandleGltfFile(path, saveModel)));
+		gameManager.Connect(GameManager.SignalName.FlyToggleButtonToggled, Callable.From<bool>((toggleOn) => jumpButton.Visible = !toggleOn));
+		gameManager.Connect(GameManager.SignalName.HUDVisibility, Callable.From<bool>((visible) => ui.Visible = visible));
 
 		saveModelDialog = GetNode<ConfirmationDialog>("SaveModelConfirmDialog");
-		saveModelDialog.Canceled += () => 
+/* 		saveModelDialog.Canceled += () => 
 		{
 			saveModelDialog.Visible = false; 
 			Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = true}); 
 			Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = false});
-		};
+		}; */
 
+		saveModelDialog.Connect(ConfirmationDialog.SignalName.Canceled, Callable.From(
+			() => 
+			{
+				saveModelDialog.Visible = false; 
+				Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = true}); 
+				Input.ParseInputEvent(new InputEventAction(){Action = "pause", Pressed = false});
+			}
+		));
 
 
 		floorMesh = GetNode<MeshInstance3D>("Floor").Mesh as PlaneMesh;
@@ -161,34 +173,21 @@ public partial class World : Node3D
 		environment = GetNode<WorldEnvironment>("WorldEnvironment").Environment;
 		//panoramaSkyMaterial = environment.Sky.SkyMaterial as PanoramaSkyMaterial;
 
-		if(!GameManager.IsMobile)
-		{
-			ui.Visible = false;
-			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
-			//fileDialog.RootSubfolder = OS.GetUserDataDir();
-		}
-		else
-		{
-			OS.RequestPermissions();
-		}
+		ui.Visible = false;
+		gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
+		OS.RequestPermissions();
 
         FileManager.CreateFolder("user://", ModelSelection.ModelsFolderName);
         FileManager.CreateFolder("user://", ModelSelection.ModelImagesFolderName);
-
-/* 		var modelFiles = FileManager.GetDirectoryFiles(ModelSelection.ModelImagesFolderPath);
-		bool fileDialogVisible = modelFiles == null || !modelFiles.Any();
-		GetTree().Paused = true;
-		pauseMenuActive = true;
-		var pauseMenu = PauseMenu.GetPauseMenu();
-		pauseMenu.AddChild(ModelSelection.GetModelSelection(fileDialogVisible));
-		AddChild(pauseMenu); */
 	}
 
 	private void ShowPauseMenu()
 	{
 		if(GameManager.IsMobile)
+		{
 			ui.Visible = false;
 			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, false);
+		}
 
 		AddChild(PauseMenu.GetPauseMenu());		
 		pauseMenuActive = true;
@@ -219,7 +218,6 @@ public partial class World : Node3D
 		pauseMenuActive = false;
 		if(GameManager.IsMobile)
 		{
-			ui.Visible = true;
 			gameManager.EmitSignal(GameManager.SignalName.HUDVisibility, true);
 		}
 	}

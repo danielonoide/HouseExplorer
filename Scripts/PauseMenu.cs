@@ -112,6 +112,7 @@ public partial class PauseMenu : Control
 		if(GameManager.IsMobile)
 		{
 			GetTree().Paused = false;
+			gameManager.EmitSignal(GameManager.SignalName.PauseMenuClosed);
 			GetTree().ReloadCurrentScene();
 			return;
 		}

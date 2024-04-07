@@ -42,7 +42,8 @@ public partial class Player : CharacterBody3D
 			return;
 		}
 		
-		gameManager.HUDVisibility += (visible) => joystick.Visible = visible;
+		//gameManager.HUDVisibility += (visible) => joystick.Visible = visible;
+		gameManager.Connect(GameManager.SignalName.HUDVisibility, Callable.From<bool>((visible) => joystick.Visible = visible));
 	}
 
  	public override void _PhysicsProcess(double delta)
