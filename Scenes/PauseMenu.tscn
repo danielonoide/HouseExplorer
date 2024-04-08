@@ -619,6 +619,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100"
 max_length = 5
+caret_blink = true
 
 [node name="Label2" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 layout_mode = 2
@@ -632,6 +633,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100"
 max_length = 5
+caret_blink = true
 
 [node name="Label3" type="Label" parent="CanvasLayer/SceneryMenu/LandMenu/VBoxContainer/FloorSizeSetting"]
 layout_mode = 2

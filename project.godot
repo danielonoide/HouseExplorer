@@ -15,10 +15,10 @@ config/version="1"
 run/main_scene="res://Scenes/World.tscn"
 config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
 boot_splash/bg_color=Color(0.247059, 0.262745, 0.368627, 1)
-boot_splash/image="res://icon.png"
+boot_splash/image="res://Icons/png/icon.png"
 boot_splash/fullsize=false
-config/icon="res://icon.png"
-config/windows_native_icon="res://logo256x256.ico"
+config/icon="res://Icons/png/isotipoV3.png"
+config/windows_native_icon="res://Icons/ico/isotipoV3.ico"
 
 [autoload]
 

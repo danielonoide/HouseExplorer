@@ -30,12 +30,8 @@ public partial class SceneryMenu : Control
     private Tab _currentTab = Tab.Land;
 
     private LineEdit _widthEdit, _heightEdit;
-
     private CheckButton _triplanarButton;
-
-
     private Vector2 NewFloorSize => new((float)Convert.ToDouble(_widthEdit.Text), (float)Convert.ToDouble(_heightEdit.Text));
-
     private Texture2D _landTexture = GD.Load<Texture2D>("res://Assets/Images/floor_texture.png");
     private Texture2D _backgroundTexture = GD.Load<Texture2D>("res://Assets/Images/panorama_image.png");
 
@@ -182,13 +178,87 @@ public partial class SceneryMenu : Control
         ChangeTab((Tab)tab);
     }
 
+
+/*     private string FilterText(string text)
+    {
+        if(text.Equals(string.Empty))
+        {
+            return "0";
+        }
+
+        bool decPoint = false;
+        StringBuilder sb = new();
+        int i = text[0].Equals('0') ? 1 : 0;
+        for(; i < text.Length; i++)
+        {
+            if(text[i].Equals('.'))
+            {
+                if(!decPoint)
+                {
+                    decPoint = true;
+                    sb.Append(text[i]);
+                }
+            }
+
+            if(char.IsDigit(text[i]))
+            {
+                sb.Append(text[i]);
+            }
+        }
+
+        if(sb.ToString().Equals(string.Empty))
+        {
+            return "0";
+        }
+
+        return sb.ToString();
+    } */
+
+    private string FilterText(string text)
+    {
+        if(text.Length > 1 && text[0].Equals('0') )
+        {
+            text = text[1..];
+        }
+
+        //solo dígitos y puntos
+        string filteredText = Regex.Replace(text, @"[^0-9.]", "");
+
+        if (string.IsNullOrEmpty(filteredText))
+        {
+            return "0";
+        }
+
+        // mantener solo el primer punto decimal
+        int decimalIndex = filteredText.IndexOf('.');
+        if (decimalIndex != -1)
+        {
+            filteredText = string.Concat(filteredText.AsSpan(0, decimalIndex + 1), filteredText[(decimalIndex + 1)..].Replace(".", ""));
+        }
+
+        return filteredText;
+    }
+
+
+
+    private void SetLineEditText(LineEdit edit, string filteredText)
+    {
+        int caretPos = edit.CaretColumn;
+        int diff = edit.Text.Length - filteredText.Length;
+        caretPos -= diff;
+        edit.Text = filteredText;
+        edit.CaretColumn = caretPos;
+    }
+
     private void _on_width_edit_text_changed(string newText)
     {
+        SetLineEditText(_widthEdit, FilterText(newText));
         World.FloorSize = NewFloorSize;
     }
 
     private void _on_height_edit_text_changed(string newText)
     {
+        SetLineEditText(_heightEdit, FilterText(newText));
         World.FloorSize = NewFloorSize;
     }
 
